@@ -1,0 +1,64 @@
+{
+  "matches" : 6,
+  "results" : [ {
+    "Entry_ID" : "imr_1426",
+    "_version_" : 1501546635644108800,
+    "Data_URL" : "ftp://ftp.nmdc.no/nmdc/IMR/fastestasjoner/Ingoy/Ingoy.txt",
+    "Start_Date" : -1066953600000,
+    "Data_Summary" : "Langtidsserier av oseanografiske stasjoner på faste steder og i standard dyp. Observasjonene utføres av lokale fiskere. Ingøy er en av for tiden 8 stasjoner i drift. Alle oseanografiske data er bearbeidet og delvis kvalitetskontrollerte. Enkle meteorologiske observasjoner blir normalt tatt (ingen kvalitetskontroll).",
+    "Entry_Title" : "Fast oseanografisk stasjon - Ingøy (1936-)",
+    "Parameter" : [ "OCEAN TEMPERATURE", "SALINITY/DENSITY" ],
+    "location_rpt" : "24.0167 71.1333",
+    "Provider" : [ "Havforskningsinstituttet" ]
+  }, {
+    "Entry_ID" : "imr_1424",
+    "_version_" : 1501546635650400256,
+    "Data_URL" : "ftp://ftp.nmdc.no/nmdc/IMR/fastestasjoner/Skrova/Skrova.txt",
+    "Start_Date" : -1074297600000,
+    "Data_Summary" : "Langtidsserier av oseanografiske stasjoner på faste steder og i standard dyp. Observasjonene utføres av lokale fiskere. Skrova er en av for tiden 8 stasjoner i drift. Alle oseanografiske data er bearbeidet og delvis kvalitetskontrollerte. Enkle meteorologiske observasjoner blir normalt tatt (ingen kvalitetskontroll).",
+    "Entry_Title" : "Fast oseanografisk stasjon - Skrova (1935-)",
+    "Parameter" : [ "OCEAN TEMPERATURE", "SALINITY/DENSITY" ],
+    "location_rpt" : "14.65 68.1167",
+    "Provider" : [ "Havforskningsinstituttet" ]
+  }, {
+    "Entry_ID" : "imr_1427",
+    "_version_" : 1501546635658788864,
+    "Data_URL" : "ftp://ftp.nmdc.no/nmdc/IMR/fastestasjoner/YUtsira/YUtsira.txt",
+    "Start_Date" : -880848000000,
+    "Data_Summary" : "Langtidsserier av oseanografiske stasjoner på faste steder og i standard dyp. Observasjonene utføres av lokale fiskere. Utsira Y er en av for tiden 8 stasjoner i drift. Alle oseanografiske data er bearbeidet og delvis kvalitetskontrollerte. Enkle meteorologiske observasjoner blir normalt tatt (ingen kvalitetskontroll).",
+    "Entry_Title" : "Fast oseanografisk stasjon - Utsira Y (1942-)",
+    "Parameter" : [ "OCEAN TEMPERATURE", "SALINITY/DENSITY" ],
+    "location_rpt" : "4.8 59.3167",
+    "Provider" : [ "Havforskningsinstituttet" ]
+  }, {
+    "Entry_ID" : "imr_1423",
+    "_version_" : 1501546635662983168,
+    "Data_URL" : "ftp://ftp.nmdc.no/nmdc/IMR/fastestasjoner/Bud/Bud.txt",
+    "Start_Date" : -753062400000,
+    "Data_Summary" : "Langtidsserier av oseanografiske stasjoner på faste steder og i standard dyp. Observasjonene utføres av lokale fiskere. Bud er en av for tiden 8 stasjoner i drift. Alle oseanografiske data er bearbeidet og delvis kvalitetskontrollerte. Enkle meteorologiske observasjoner blir normalt tatt (ingen kvalitetskontroll).",
+    "Entry_Title" : "Fast oseanografisk stasjon - Bud (1946-)",
+    "Parameter" : [ "OCEAN TEMPERATURE", "SALINITY/DENSITY" ],
+    "location_rpt" : "6.7833 62.9333",
+    "Provider" : [ "Havforskningsinstituttet" ]
+  }, {
+    "Entry_ID" : "imr_1420",
+    "_version_" : 1501546635674517504,
+    "Data_URL" : "ftp://ftp.nmdc.no/nmdc/IMR/fastestasjoner/Lista/Lista.txt",
+    "Start_Date" : -883612800000,
+    "Data_Summary" : "Langtidsserier av oseanografiske stasjoner på faste steder og i standard dyp. Observasjonene utføres av lokale fiskere. Lista er en av for tiden 8 stasjoner i drift. Alle oseanografiske data er bearbeidet og delvis kvalitetskontrollerte. Enkle meteorologiske observasjoner blir normalt tatt (ingen kvalitetskontroll).",
+    "Entry_Title" : "Fast oseanografisk stasjon - Lista (1942-)",
+    "Parameter" : [ "OCEAN TEMPERATURE", "SALINITY/DENSITY" ],
+    "location_rpt" : "6.5333 58.0833",
+    "Provider" : [ "Havforskningsinstituttet" ]
+  }, {
+    "Entry_ID" : "imr_1422",
+    "_version_" : 1501546635678711808,
+    "Data_URL" : "ftp://ftp.nmdc.no/nmdc/IMR/fastestasjoner/Sognesjoen/Sognesjoen.txt",
+    "Start_Date" : -1104537600000,
+    "Data_Summary" : "Langtidsserier av oseanografiske stasjoner på faste steder og i standard dyp. Observasjonene utføres av lokale fiskere. Sognesjøen er en av for tiden 8 stasjoner i drift. Alle oseanografiske data er bearbeidet og delvis kvalitetskontrollerte. Enkle meteorologiske observasjoner blir normalt tatt (ingen kvalitetskontroll).",
+    "Entry_Title" : "Fast oseanografisk stasjon - Sognesjøen (1935-)",
+    "Parameter" : [ "OCEAN TEMPERATURE", "SALINITY/DENSITY" ],
+    "location_rpt" : "4.765 60.98",
+    "Provider" : [ "Havforskningsinstituttet" ]
+  } ]
+}

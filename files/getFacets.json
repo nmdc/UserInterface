@@ -1,0 +1,20 @@
+{
+  "facets" : [ {
+    "name" : "Parameter",
+    "matches" : "2",
+    "children" : [ {
+      "value" : "OCEAN TEMPERATURE",
+      "matches" : "6"
+    }, {
+      "value" : "SALINITY/DENSITY",
+      "matches" : "6"
+    } ]
+  }, {
+    "name" : "Provider",
+    "matches" : "1",
+    "children" : [ {
+      "value" : "Havforskningsinstituttet",
+      "matches" : "6"
+    } ]
+  } ]
+}

@@ -1,0 +1,17 @@
+<div ng-controller="NmdcBasketController as ctrl">
+    <h2>Basket</h2>
+    <div ng-show="ctrl.model.basket.count == 0">Basket is empty</div>
+    <div class="nmdc-item" ng-repeat="(id, item) in ctrl.model.basket.idToItem">
+        <div>{{item.Entry_Title}}</div>
+        <div>{{item.Data_Summary}}</div>
+        <div>
+            <a download target="_blank" ng-href="{{item.Data_URL}}">Download</a>
+            <a target="_blank" ng-href="{{item.Data_URL}}">View</a>
+            <a ng-href="#/details/{{item.Entry_ID}}">Details</a>
+            <a href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+        </div>
+    </div>
+    <p>
+        <a ng-href="#/">Go to search</a>
+    </p>
+</div>

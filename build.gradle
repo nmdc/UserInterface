@@ -1,0 +1,63 @@
+plugins {
+    id 'com.github.ben-manes.versions' version '0.9'
+    id 'com.eriwen.gradle.js' version '1.12.1'
+    id 'com.eriwen.gradle.css' version '1.11.1'
+}
+
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.17'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.17'
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:all,-path,-serial'
+}
+
+css.source {
+    dev {
+        css {
+            srcDir 'src/main/webapp/_static_content_/css'
+            include '*.css'
+        }
+    }
+}
+
+javascript.source {
+    dev {
+        js {
+            srcDir 'src/main/webapp/_static_content_/js'
+            include '*.js'
+        }
+    }
+}
+
+csslint {
+    tasks.csslint.source = css.source.dev.css.files
+    tasks.csslint.dest = "${buildDir}/reports/csslint/csslint.txt"
+}
+
+jshint {
+    tasks.jshint.source = javascript.source.dev.js.files
+    tasks.jshint.dest = file("${buildDir}/reports/jshint/jshint.xml")
+    tasks.jshint.reporter = 'checkstyle'
+}
+
+check.dependsOn tasks.csslint, tasks.jshint
+
+task run(type: JavaExec, dependsOn: classes) {
+    main = 'no.nmdc.ui.test.server.ServerMain'
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperty 'no.nmdc.server.url', 'http://test1.nmdc.no/'
+    args = ['-browse']
+    standardInput = System.in
+}

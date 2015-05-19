@@ -1,0 +1,54 @@
+{
+  "data":[
+    {
+      "year":"2004",
+      "provider":{
+        "provider":"IMR",
+        "url":" ftp://ftp.imr.no/nmdc/data/"
+      },
+      "identifiers":[
+        " doi:10.1594/IMR.134595"
+      ],
+      "disseminations":[
+        {
+          "access":"open access",
+          "mime":"text/tab-separated-values",
+          "type":"download",
+          "title":"TestData",
+          "fileType":"csv",
+          "url":" ftp://ftp.imr.no/nmdc/data/134595?format=textfile "
+        }
+      ],
+      "geometry":{
+        "coordinates":[
+          -20.235,
+          49.0914
+        ],
+        "type":"Point"
+      },
+      "id":" doi:10.1594/IMR.134595",
+      "title":"Nutrients measured on water bottle samples at station DI190_12034#1",
+      "expeditions":[
+        ""
+      ],
+      "authors":"author",
+      "platforms":[
+        "platform"
+      ],
+      "summary":"some summary",
+      "personnel": {
+        "Role": " aRole ",
+        "First_name": " Jon ",
+        "Middle_name": "",
+        "Last_name": " Doe ",
+        "Email":" rolle@domain.com"
+      },
+      "Project":"description",
+      "Keyword":"some keywords",
+      "bbox": "{-90,-180,90,180}",
+      "depth": "{-100, 0}"
+    }
+  ],
+  "totalHits":1,
+  "maxHits":0
+}

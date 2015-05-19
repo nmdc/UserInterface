@@ -1,0 +1,58 @@
+<div ng-controller="NmdcSearchController as ctrl">
+
+    <div class="nmdc-facets">
+        <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
+            <div class="nmdc-facet-name">{{facet.name}} ({{facet.matches}})</div>
+            <div class="nmdc-facet-child" ng-repeat="child in facet.children">
+                <input id="nmdc-facet-{{facet.name}}-{{child.value}}" type="checkbox" ng-model="child.selected" ng-change="ctrl.search()">
+                <label for="nmdc-facet-{{facet.name}}-{{child.value}}">{{child.value}} ({{child.matches}})</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="nmdc-coverage">
+        <h4>Geographical coverage</h4>
+
+        <div nmdc-map id="nmdc-map"></div>
+        <input id="useGeographicalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.useGeographicalCoverage">
+        <label for="useGeographicalCoverage">Filter by map bounding box</label>
+
+        <h4>Temporal coverage</h4>
+        <table>
+            <tr>
+                <td><label for="beginDate">Begin</label></td>
+                <td><input id="beginDate" type="text" ng-model="ctrl.model.search.coverage.beginDate"></td>
+            </tr>
+            <tr>
+                <td><label for="endDate">End</label></td>
+                <td><input id="endDate" type="text" ng-model="ctrl.model.search.coverage.endDate"></td>
+            </tr>
+        </table>
+        <input id="useTemporalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.useTemporalCoverage">
+        <label for="useTemporalCoverage">Filter by temporal coverage</label>
+    </div>
+
+    <div class="nmdc-search">
+        <div ng-hide="ctrl.model.ready">Loading configuration...</div>
+        <form ng-submit="ctrl.search()">
+            <input class="nmdc-search-text" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
+            <input class="nmdc-search-button" type="submit" value="Search">
+        </form>
+        <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
+        <div>
+            <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
+            <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results">
+                <div>{{item.Entry_Title}}</div>
+                <div>{{item.Data_Summary}}</div>
+                <div>
+                    <a ng-href="#/details/{{item.Entry_ID}}">Details</a>
+                    <a ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
+                    <a ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+                </div>
+            </div>
+        </div>
+        <pagination ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
+                    max-size="10" class="pagination-sm" boundary-links="true"></pagination>
+    </div>
+
+</div>
