@@ -53,3 +53,11 @@
     width: 100%;
     height: 300px;
 }
+
+.leaflet-draw-toolbar .nmdc-map-button {
+    cursor: pointer;
+}
+
+.leaflet-draw-toolbar .nmdc-map-button-bounding-box {
+    background-position: 1000px 0;
+}

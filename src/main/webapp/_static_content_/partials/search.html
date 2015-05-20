@@ -14,21 +14,27 @@
         <h4>Geographical coverage</h4>
 
         <div nmdc-map id="nmdc-map"></div>
-        <input id="useGeographicalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.useGeographicalCoverage">
-        <label for="useGeographicalCoverage">Filter by map bounding box</label>
+        <input id="useGeographicalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.geographical.use">
+        <label for="useGeographicalCoverage">Filter by
+            <span ng-switch="ctrl.model.search.coverage.geographical.type">
+                <span ng-switch-when="rectangle">rectangle</span>
+                <span ng-switch-when="polygon">polygon</span>
+                <span ng-switch-default>map bounding box</span>
+            </span>
+        </label>
 
         <h4>Temporal coverage</h4>
         <table>
             <tr>
                 <td><label for="beginDate">Begin</label></td>
-                <td><input id="beginDate" type="text" ng-model="ctrl.model.search.coverage.beginDate"></td>
+                <td><input id="beginDate" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"></td>
             </tr>
             <tr>
                 <td><label for="endDate">End</label></td>
-                <td><input id="endDate" type="text" ng-model="ctrl.model.search.coverage.endDate"></td>
+                <td><input id="endDate" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"></td>
             </tr>
         </table>
-        <input id="useTemporalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.useTemporalCoverage">
+        <input id="useTemporalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.temporal.use">
         <label for="useTemporalCoverage">Filter by temporal coverage</label>
     </div>
 
