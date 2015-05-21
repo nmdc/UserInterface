@@ -3,9 +3,10 @@
     <div class="nmdc-facets">
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
             <div class="nmdc-facet-name">{{facet.name}} ({{facet.matches}})</div>
-            <div class="nmdc-facet-child" ng-repeat="child in facet.children">
-                <input id="nmdc-facet-{{facet.name}}-{{child.value}}" type="checkbox" ng-model="child.selected" ng-change="ctrl.search()">
-                <label for="nmdc-facet-{{facet.name}}-{{child.value}}">{{child.value}} ({{child.matches}})</label>
+            <div class="nmdc-facet-child checkbox" ng-repeat="child in facet.children">
+                <label>
+                    <input type="checkbox" ng-model="child.selected" ng-change="ctrl.search()"> {{child.value}} ({{child.matches}})
+                </label>
             </div>
         </div>
     </div>
@@ -14,38 +15,53 @@
         <h4>Geographical coverage</h4>
 
         <div nmdc-map id="nmdc-map"></div>
-        <input id="useGeographicalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.geographical.use">
-        <label for="useGeographicalCoverage">Filter by
-            <span ng-switch="ctrl.model.search.coverage.geographical.type">
-                <span ng-switch-when="rectangle">rectangle</span>
-                <span ng-switch-when="polygon">polygon</span>
-                <span ng-switch-default>map bounding box</span>
-            </span>
-        </label>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.use"> Filter by
+                <span ng-switch="ctrl.model.search.coverage.geographical.type">
+                    <span ng-switch-when="rectangle">rectangle</span>
+                    <span ng-switch-when="polygon">polygon</span>
+                    <span ng-switch-default>map bounding box</span>
+                </span>
+            </label>
+        </div>
 
-        <h4>Temporal coverage</h4>
-        <table>
-            <tr>
-                <td><label for="beginDate">Begin</label></td>
-                <td><input id="beginDate" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"></td>
-            </tr>
-            <tr>
-                <td><label for="endDate">End</label></td>
-                <td><input id="endDate" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"></td>
-            </tr>
-        </table>
-        <input id="useTemporalCoverage" type="checkbox" ng-model="ctrl.model.search.coverage.temporal.use">
-        <label for="useTemporalCoverage">Filter by temporal coverage</label>
+        <h4 class="nmdc-coverage-temporal">Temporal coverage</h4>
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="beginDate" class="col-sm-2 control-label">Begin</label>
+
+                <div class="col-sm-10">
+                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="endDate" class="col-sm-2 control-label">End</label>
+
+                <div class="col-sm-10">
+                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate">
+                </div>
+            </div>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.use"> Filter by temporal coverage
+            </label>
+        </div>
     </div>
 
     <div class="nmdc-search">
         <div ng-hide="ctrl.model.ready">Loading configuration...</div>
         <form ng-submit="ctrl.search()">
-            <input class="nmdc-search-text" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
-            <input class="nmdc-search-button" type="submit" value="Search">
+            <div class="nmdc-search-text-container">
+                <input class="form-control" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
+                <span class="nmdc-clear glyphicon glyphicon-remove-circle" ng-click="ctrl.clearSearchText()"></span>
+            </div>
+            <button class="btn btn-primary nmdc-search-button" type="submit">Search</button>
         </form>
         <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
-        <div>
+        <div class="nmdc-search-results">
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results">
                 <div>{{item.Entry_Title}}</div>
@@ -56,9 +72,9 @@
                     <a ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
                 </div>
             </div>
+            <pagination ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
+                        max-size="10" class="pagination-sm" boundary-links="true"></pagination>
         </div>
-        <pagination ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
-                    max-size="10" class="pagination-sm" boundary-links="true"></pagination>
     </div>
 
 </div>

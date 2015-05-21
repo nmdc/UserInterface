@@ -83,6 +83,10 @@
             ctrl.isSearching = false;
             var cancelSearch = function () {};
 
+            ctrl.clearSearchText = function () {
+                Model.search.text = '';
+                ctrl.search();
+            };
             ctrl.search = function (isPageSearch) {
                 cancelSearch();
                 ctrl.isSearching = true;
