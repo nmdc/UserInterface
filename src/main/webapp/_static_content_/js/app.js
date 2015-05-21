@@ -27,7 +27,7 @@
                 ready: false,
                 facets: [],
                 search: {
-                    response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
+                    query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
                         geographical: {
                             use: false,
                             type: 'mapBoundingBox',
@@ -88,22 +88,7 @@
                 ctrl.search();
             };
             ctrl.search = function (isPageSearch) {
-                cancelSearch();
-                ctrl.isSearching = true;
-                var canceller = $q.defer();
-                var isCancelled = false;
-                cancelSearch = function () {
-                    isCancelled = true;
-                    canceller.resolve('cancelled');
-                };
-
-                function setResponse(response) {
-                    ctrl.isSearching = false;
-                    Model.search.response = response;
-                    if (!isPageSearch) Model.search.currentPage = 0;
-                }
-
-                function getQueryString() {
+                function getQuery() {
                     var terms = [];
                     Model.facets.forEach(function (facet) {
                         var facetTerms = [];
@@ -129,9 +114,27 @@
                     return terms.join(' AND ');
                 }
 
-                var searchUrl = apiPath + 'search?q=' + getQueryString();
-                console.log(searchUrl);
-                $http.get(searchUrl, {timeout: canceller.promise})
+                var query = getQuery();
+                if (Model.search.query == query) return;
+                Model.search.query = query;
+                console.log('q=' + query);
+
+                cancelSearch();
+                ctrl.isSearching = true;
+                var canceller = $q.defer();
+                var isCancelled = false;
+                cancelSearch = function () {
+                    isCancelled = true;
+                    canceller.resolve('cancelled');
+                };
+
+                function setResponse(response) {
+                    ctrl.isSearching = false;
+                    Model.search.response = response;
+                    if (!isPageSearch) Model.search.currentPage = 0;
+                }
+
+                $http.get(apiPath + 'search?q=' + query, {timeout: canceller.promise})
                     .success(setResponse)
                     .error(function (data, status) {
                         if (isCancelled) return;
@@ -144,18 +147,10 @@
                 if (newValue === oldValue) return;
                 ctrl.search(true);
             });
-            $scope.$watchCollection('ctrl.model.search.coverage.geographical', function (newValue, oldValue) {
-                if (newValue === oldValue || !newValue.use && !oldValue.use) return;
-                var newUse = newValue.use && newValue.coordinates.length > 0;
-                var oldUse = oldValue.use && oldValue.coordinates.length > 0;
-                if (!newUse && !oldUse) return;
-                ctrl.search();
-            });
-            $scope.$watchCollection('ctrl.model.search.coverage.temporal', function (newValue, oldValue) {
+            $scope.$watch('ctrl.model.search.coverage', function (newValue, oldValue) {
                 if (newValue === oldValue) return;
-                if (!newValue.use && !oldValue.use) return;
                 ctrl.search();
-            });
+            }, true);
             $scope.$on('$destroy', cancelSearch);
         }])
         .directive('nmdcMap', ['NmdcModel', function (Model) {
