@@ -7,6 +7,7 @@ release.properties
 
 .idea/dictionaries
 .idea/libraries/Gradle__*
+.idea/shelf
 .idea/workspace.xml
 .gradle
 build
