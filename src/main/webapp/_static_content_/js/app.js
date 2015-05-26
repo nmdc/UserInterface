@@ -22,7 +22,7 @@
             };
             return util;
         }])
-        .factory('NmdcModel', ['$http', '$window', 'NmdcUtil', function ($http, $window, Util) {
+        .factory('NmdcModel', ['$http', 'NmdcUtil', function ($http, Util) {
             var model = {
                 ready: false,
                 facets: [],
@@ -50,7 +50,7 @@
                     model.ready = true;
                 })
                 .error(function (data, status) {
-                    $window.alert('Error getting facets.\nStatus: ' + status + '\nMessage: ' + data.message);
+                    model.facets.error = {header: 'Error getting facets', status: status, response: data};
                 });
 
             model.basket.clear = function () {
@@ -75,7 +75,7 @@
             $scope.ctrl = ctrl;
             ctrl.model = Model;
         }])
-        .controller('NmdcSearchController', ['$scope', '$http', '$window', '$q', 'NmdcModel', function ($scope, $http, $window, $q, Model) {
+        .controller('NmdcSearchController', ['$scope', '$http', '$q', 'NmdcModel', function ($scope, $http, $q, Model) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
@@ -131,6 +131,7 @@
                 function setResponse(response) {
                     ctrl.isSearching = false;
                     Model.search.response = response;
+                    delete Model.search.error;
                     if (!isPageSearch) Model.search.currentPage = 0;
                 }
 
@@ -139,7 +140,7 @@
                     .error(function (data, status) {
                         if (isCancelled) return;
                         setResponse({});
-                        $window.alert('Error getting search results.\nStatus: ' + status + '\nMessage: ' + data.message);
+                        Model.search.error = {header: 'Error getting search results', status: status, response: data};
                     });
             };
 
@@ -241,12 +242,24 @@
                 }
             };
         }])
-        .controller('NmdcBasketController', ['$scope', '$http', '$window', '$routeParams', 'NmdcModel', function ($scope, $http, $window, $routeParams, Model) {
+        .directive('nmdcError', [function () {
+            return {
+                restrict: 'A',
+                scope: {nmdcError: '='},
+                template:
+                '<alert ng-show="nmdcError" type="danger">' +
+                '<h4>{{nmdcError.header}}</h4>' +
+                '<div><strong>Status:</strong> {{nmdcError.status}}</div>' +
+                '<div><strong>Message:</strong> {{nmdcError.response.message}}</div>' +
+                '</alert>'
+            };
+        }])
+        .controller('NmdcBasketController', ['$scope', 'NmdcModel', function ($scope, Model) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
         }])
-        .controller('NmdcDetailsController', ['$scope', '$http', '$window', '$routeParams', 'NmdcModel', function ($scope, $http, $window, $routeParams, Model) {
+        .controller('NmdcDetailsController', ['$scope', '$http', '$routeParams', 'NmdcModel', function ($scope, $http, $routeParams, Model) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
@@ -257,7 +270,7 @@
                     ctrl.details = data.data[0];
                 })
                 .error(function (data, status) {
-                    $window.alert('Error getting metadata details.\nStatus: ' + status + '\nMessage: ' + data.message);
+                    ctrl.error = {header: 'Error getting metadata details', status: status, response: data};
                 });
         }]);
 }());

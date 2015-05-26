@@ -1,5 +1,6 @@
 <div ng-controller="NmdcDetailsController as ctrl">
     <h2>{{ctrl.details.title}}</h2>
+    <div nmdc-error="ctrl.error"></div>
     <table>
         <tr ng-repeat="(key, value) in ctrl.details">
             <td>{{key}}</td>

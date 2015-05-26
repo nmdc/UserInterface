@@ -1,6 +1,7 @@
 <div ng-controller="NmdcSearchController as ctrl">
 
     <div class="nmdc-facets">
+        <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
             <div class="nmdc-facet-name">{{facet.name}} ({{facet.matches}})</div>
             <div class="nmdc-facet-child checkbox" ng-repeat="child in facet.children">
@@ -62,6 +63,7 @@
         </form>
         <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
         <div class="nmdc-search-results">
+            <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results">
                 <div>{{item.Entry_Title}}</div>
