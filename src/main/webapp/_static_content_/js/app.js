@@ -30,6 +30,7 @@
                     query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
                         geographical: {
                             use: false,
+                            operation: 'IsWithin',
                             type: 'mapBoundingBox',
                             coordinates: []
                         },
@@ -109,7 +110,7 @@
                         Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(point.lng + ' ' + point.lat); });
                         var first = Model.search.coverage.geographical.coordinates[0];
                         coordinates.push(first.lng + ' ' + first.lat);
-                        terms.push('location_rpt:"IsWithin(POLYGON((' + coordinates.join(',') + ')))"');
+                        terms.push('location_rpt:"' + Model.search.coverage.geographical.operation + '(POLYGON((' + coordinates.join(',') + ')))"');
                     }
                     return terms.join(' AND ');
                 }
