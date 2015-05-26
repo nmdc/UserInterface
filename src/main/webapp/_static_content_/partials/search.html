@@ -67,13 +67,13 @@
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
-            <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results">
-                <div>{{item.Entry_Title}}</div>
+            <div ng-repeat="item in ctrl.model.search.response.results">
+                <h4>{{item.Entry_Title}}</h4>
                 <div>{{item.Data_Summary}}</div>
                 <div>
-                    <a ng-href="#/details/{{item.Entry_ID}}">Details</a>
-                    <a ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
-                    <a ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+                    <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID}}">Details</a>
+                    <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
+                    <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
                 </div>
             </div>
             <pagination ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"

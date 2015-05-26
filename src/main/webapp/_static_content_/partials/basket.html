@@ -2,13 +2,13 @@
     <h2>Basket</h2>
     <div ng-show="ctrl.model.basket.count == 0">Basket is empty</div>
     <div class="nmdc-item" ng-repeat="(id, item) in ctrl.model.basket.idToItem">
-        <div>{{item.Entry_Title}}</div>
+        <h4>{{item.Entry_Title}}</h4>
         <div>{{item.Data_Summary}}</div>
         <div>
-            <a download target="_blank" ng-href="{{item.Data_URL}}">Download</a>
-            <a target="_blank" ng-href="{{item.Data_URL}}">View</a>
-            <a ng-href="#/details/{{item.Entry_ID}}">Details</a>
-            <a href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+            <a class="btn btn-info btn-xs" download target="_blank" ng-href="{{item.Data_URL}}">Download</a>
+            <a class="btn btn-info btn-xs" target="_blank" ng-href="{{item.Data_URL}}">View</a>
+            <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID}}">Details</a>
+            <a class="btn btn-info btn-xs" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
         </div>
     </div>
     <p>

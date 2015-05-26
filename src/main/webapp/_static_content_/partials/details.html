@@ -7,8 +7,8 @@
             <td>{{value}}</td>
         </tr>
     </table>
-    <a ng-hide="ctrl.model.basket.idToItem[ctrl.id]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
-    <a ng-show="ctrl.model.basket.idToItem[ctrl.id]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+    <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[ctrl.id]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
+    <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[ctrl.id]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
     <p>
         <a ng-href="#/">Go to search</a>
     </p>
