@@ -19,8 +19,8 @@
             <img class="img-responsive center-block" src="http://nmdc.no/resources/images/prosjekter/nmdc/bannerNMDC.jpg/original">
         </div>
         <div class="col-sm-1 text-right">
-            <div><a href="#/basket"><span class="glyphicon glyphicon-shopping-cart"></span> Basket</a> <a href="" ng-click="ctrl.model.basket.clear()">Reset</a></div>
-            <div>Data sets: {{ctrl.model.basket.count}}</div>
+            <a href="#/basket"><span class="glyphicon glyphicon-shopping-cart"></span> Basket
+                <span class="badge" ng-show="ctrl.model.basket.count">{{ctrl.model.basket.count}}</span></a>
         </div>
     </div>
     <div ng-view></div>

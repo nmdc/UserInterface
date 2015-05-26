@@ -52,9 +52,9 @@
         </div>
     </div>
 
-    <div class="col-sm-8 col-sm-pull-2 nmdc-search">
+    <div class="col-sm-8 col-sm-pull-2">
         <div ng-hide="ctrl.model.ready">Loading configuration...</div>
-        <form ng-submit="ctrl.search()">
+        <form class="nmdc-search-form" ng-submit="ctrl.search()">
             <div class="input-group">
                 <input class="form-control" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
                 <span class="nmdc-clear glyphicon glyphicon-remove-circle" ng-click="ctrl.clearSearchText()"></span>
@@ -69,12 +69,13 @@
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
             <div ng-repeat="item in ctrl.model.search.response.results">
                 <h4>{{item.Entry_Title}}</h4>
-                <div>{{item.Data_Summary}}</div>
-                <div>
+                <p>
+                    {{item.Data_Summary}}
+                    <br>
                     <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID}}">Details</a>
                     <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
                     <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
-                </div>
+                </p>
             </div>
             <pagination ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
                         max-size="10" class="pagination-sm" boundary-links="true"></pagination>
