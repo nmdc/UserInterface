@@ -35,3 +35,7 @@
     color: #ccc;
     z-index: 2;
 }
+
+.nmdc-logo-container a {
+    margin: 5px;
+}
