@@ -84,7 +84,7 @@
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
             <div ng-repeat="item in ctrl.model.search.response.results">
-                <h4>{{item.Entry_Title}}</h4>
+                <h4><a ng-href="#/details/{{item.Entry_ID}}">{{item.Entry_Title}}</a></h4>
                 <p>
                     {{item.Data_Summary}}
                     <br>
