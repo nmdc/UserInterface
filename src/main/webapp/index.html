@@ -2,18 +2,18 @@
 <html ng-app="NmdcApp">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title>NMDC</title>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"/>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.2.3/leaflet.draw.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="_static_content_/css/app.css">
 </head>
 <body>
 
-<div ng-controller="NmdcHeaderController as ctrl" class="nmdc-header">
+<div ng-controller="NmdcHeaderController as ctrl">
     <div class="nmdc-basket">
         <div><a href="#/basket"><span class="glyphicon glyphicon-shopping-cart"></span> Basket</a> <a href="" ng-click="ctrl.model.basket.clear()">Reset</a></div>
         <div>Data sets: {{ctrl.model.basket.count}}</div>
