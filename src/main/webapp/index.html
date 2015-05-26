@@ -19,8 +19,9 @@
             <img class="img-responsive center-block" src="http://nmdc.no/resources/images/prosjekter/nmdc/bannerNMDC.jpg/original">
         </div>
         <div class="col-sm-1 text-right">
-            <a href="#/basket"><span class="glyphicon glyphicon-shopping-cart"></span> Basket
-                <span class="badge" ng-show="ctrl.model.basket.count">{{ctrl.model.basket.count}}</span></a>
+            <a href="#/basket"><span class="glyphicon glyphicon-shopping-cart"></span>
+                <span class="badge alert-info">{{ctrl.model.basket.count}}</span>
+                Basket</a>
         </div>
     </div>
     <div ng-view></div>

@@ -1,3 +1,7 @@
+.nmdc-facet {
+    word-wrap: break-word;
+}
+
 .nmdc-search-form {
     margin: 10px 0;
 }
