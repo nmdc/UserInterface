@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-controller="NmdcSearchController as ctrl">
+<div class="row" ng-controller="NmdcSearchController as ctrl">
 
     <div class="col-sm-2">
         <div nmdc-error="ctrl.model.facets.error"></div>
@@ -52,7 +52,7 @@
         </div>
     </div>
 
-    <div class="col-sm-8 col-sm-pull-2">
+    <div class="col-sm-8 col-sm-pull-2 nmdc-search">
         <div ng-hide="ctrl.model.ready">Loading configuration...</div>
         <form ng-submit="ctrl.search()">
             <div class="input-group">
