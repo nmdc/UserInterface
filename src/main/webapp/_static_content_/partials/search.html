@@ -95,7 +95,7 @@
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
-            <div ng-repeat="item in ctrl.model.search.response.results">
+            <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results">
                 <h4><a ng-href="#/details/{{item.Entry_ID}}">{{item.Entry_Title}}</a></h4>
                 <p>
                     {{item.Data_Summary}}
@@ -105,7 +105,7 @@
                     <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
                 </p>
             </div>
-            <pagination ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
+            <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
                         max-size="10" class="pagination-sm" boundary-links="true"></pagination>
         </div>
     </div>

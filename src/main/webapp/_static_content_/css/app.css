@@ -2,8 +2,20 @@
     word-wrap: break-word;
 }
 
+.nmdc-item {
+    margin: 25px 0;
+}
+
+.nmdc-item h4 {
+    margin-bottom: 0;
+}
+
 .nmdc-search-form {
     margin: 10px 0;
+}
+
+.nmdc-pagination {
+    margin: 0;
 }
 
 .nmdc-searching {

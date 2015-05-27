@@ -28,7 +28,7 @@
             };
             return util;
         }])
-        .factory('NmdcModel', ['$http', 'NmdcUtil', function ($http, Util) {
+        .factory('NmdcModel', ['$http', function ($http) {
             var model = {
                 ready: false,
                 facets: [],
