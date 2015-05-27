@@ -12,6 +12,12 @@
                 .when('/details/:id', {templateUrl: '_static_content_/partials/details.html'})
                 .otherwise({redirectTo: '/'});
         }])
+        .config(['datepickerConfig', 'datepickerPopupConfig', function (datepickerConfig, datepickerPopupConfig) {
+            datepickerConfig.startingDay = 1;
+            datepickerConfig.showWeeks = true;
+            datepickerConfig.minMode = 'month';
+            datepickerPopupConfig.closeText = 'Close';
+        }])
         .factory('NmdcUtil', [function () {
             var util = {};
             util.twoDigits = function (x) {
@@ -36,8 +42,8 @@
                         },
                         temporal: {
                             use: false,
-                            beginDate: Util.formatDate(new Date(1800, 0, 1)),
-                            endDate: Util.formatDate(new Date())
+                            beginDate: new Date(1800, 0, 1),
+                            endDate: new Date()
                         }
                     }
                 },
@@ -143,6 +149,16 @@
                         setResponse({});
                         Model.search.error = {header: 'Error getting search results', status: status, response: data};
                     });
+            };
+
+            ctrl.date = {
+                begin: {opened: false},
+                end: {opened: false},
+                open: function (which, event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    ctrl.date[which].opened = true;
+                }
             };
 
             $scope.$watch('ctrl.model.search.currentPage', function (newValue, oldValue) {

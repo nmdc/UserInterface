@@ -43,3 +43,11 @@
 .nmdc-logo-container a {
     margin: 5px;
 }
+
+.date-picker-right-container {
+    position: relative;
+}
+.date-picker-right-container .dropdown-menu {
+    left: auto !important;
+    right: 0;
+}

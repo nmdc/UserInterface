@@ -47,17 +47,29 @@
 
         <div class="form-horizontal">
             <div class="form-group">
-                <label for="beginDate" class="col-md-3 control-label">Begin</label>
+                <label for="beginDate" class="col-lg-2 control-label">From</label>
 
-                <div class="col-md-9">
-                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate">
+                <div class="col-lg-10">
+                    <div class="input-group date-picker-right-container">
+                        <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
+                               datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="endDate" class="col-md-3 control-label">End</label>
+                <label for="endDate" class="col-lg-2 control-label">To</label>
 
-                <div class="col-md-9">
-                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate">
+                <div class="col-lg-10">
+                    <div class="input-group date-picker-right-container">
+                        <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
+                               datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
