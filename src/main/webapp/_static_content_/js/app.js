@@ -142,7 +142,7 @@
                     if (!isPageSearch) Model.search.currentPage = 0;
                 }
 
-                $http.get(apiPath + 'search?q=' + query, {timeout: canceller.promise})
+                $http.get(apiPath + 'search?q=' + encodeURIComponent(query), {timeout: canceller.promise})
                     .success(setResponse)
                     .error(function (data, status) {
                         if (isCancelled) return;
