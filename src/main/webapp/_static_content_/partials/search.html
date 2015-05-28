@@ -4,6 +4,7 @@
         <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
             <h4>{{facet.name}} ({{facet.matches}})</h4>
+
             <div class="checkbox" ng-repeat="child in facet.children">
                 <label>
                     <input type="checkbox" ng-model="child.selected" ng-change="ctrl.search()"> {{child.value}} ({{child.matches}})
@@ -13,70 +14,74 @@
     </div>
 
     <div class="col-sm-2 col-sm-push-8">
-        <h4>Geographical coverage</h4>
+        <div class="nmdc-coverage">
+            <h4>Geographical coverage</h4>
 
-        <div class="form-horizontal">
-            <div class="form-group">
-                <div class="col-lg-12">
-                    <div nmdc-map id="nmdc-map"></div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <div nmdc-map id="nmdc-map"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="operation" class="col-lg-4 control-label">Operation</label>
+
+                    <div class="col-lg-8">
+                        <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation">
+                            <option value="IsWithin">Is within</option>
+                            <option value="Intersects">Intersects</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="operation" class="col-lg-4 control-label">Operation</label>
-
-                <div class="col-lg-8">
-                    <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation">
-                        <option value="IsWithin">Is within</option>
-                        <option value="Intersects">Intersects</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.use"> Filter by
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.use"> Filter by
                 <span ng-switch="ctrl.model.search.coverage.geographical.type">
                     <span ng-switch-when="rectangle">rectangle</span>
                     <span ng-switch-when="polygon">polygon</span>
                     <span ng-switch-default>map bounding box</span>
                 </span>
-            </label>
+                </label>
+            </div>
         </div>
 
-        <h4>Temporal coverage</h4>
+        <div class="nmdc-coverage">
+            <h4>Temporal coverage</h4>
 
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="beginDate" class="col-lg-2 control-label">From</label>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label for="beginDate" class="col-lg-2 control-label">From</label>
 
-                <div class="col-lg-10">
-                    <div class="input-group date-picker-right-container">
-                        <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
-                               datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
+                    <div class="col-lg-10">
+                        <div class="input-group date-picker-right-container">
+                            <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
+                                   datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="endDate" class="col-lg-2 control-label">To</label>
+                <div class="form-group">
+                    <label for="endDate" class="col-lg-2 control-label">To</label>
 
-                <div class="col-lg-10">
-                    <div class="input-group date-picker-right-container">
-                        <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
-                               datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
+                    <div class="col-lg-10">
+                        <div class="input-group date-picker-right-container">
+                            <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
+                                   datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.use"> Filter by temporal coverage
-            </label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.use"> Filter by temporal coverage
+                </label>
+            </div>
         </div>
     </div>
 
@@ -97,6 +102,7 @@
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results">
                 <h4><a ng-href="#/details/{{item.Entry_ID}}">{{item.Entry_Title}}</a></h4>
+
                 <p>
                     {{item.Data_Summary}}
                     <br>

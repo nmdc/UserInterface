@@ -1,4 +1,5 @@
 .nmdc-facet {
+    margin-bottom: 25px;
     word-wrap: break-word;
 }
 
@@ -37,6 +38,10 @@
 
 .leaflet-draw-toolbar .nmdc-map-button-bounding-box {
     background-position: 1000px 0;
+}
+
+.nmdc-coverage {
+    margin-bottom: 25px;
 }
 
 .nmdc-clear {
