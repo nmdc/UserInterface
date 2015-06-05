@@ -113,12 +113,35 @@
                     }
                     if (Model.search.coverage.geographical.use && Model.search.coverage.geographical.coordinates.length > 0) {
                         var coordinates = [];
-                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(point.lng + ' ' + point.lat); });
+                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(coordTrafo(point.lng, 180) + ' ' + clip(point.lat, -90, 90)); });
                         var first = Model.search.coverage.geographical.coordinates[0];
-                        coordinates.push(first.lng + ' ' + first.lat);
+                        coordinates.push(coordTrafo(first.lng, 180) + ' ' + clip(first.lat, -90, 90));
                         terms.push('location_rpt:"' + Model.search.coverage.geographical.operation + '(POLYGON((' + coordinates.join(',') + ')))"');
                     }
                     return terms.join(' AND ');
+                }
+
+                function coordTrafo(a, n)
+                {
+                    console.log(a);
+                    if (Math.abs(a) >= n)
+                    {
+                        if (a > 0)
+                        {
+                            return -180 + a % n;
+                        }
+                        else{
+                            return 180 + a % n;
+                        }
+                    }
+                    else{
+                        return a;
+                    }
+                }
+
+                function clip(a, min, max)
+                {
+                    return Math.max(Math.min(a, max), min);
                 }
 
                 var query = getQuery();
