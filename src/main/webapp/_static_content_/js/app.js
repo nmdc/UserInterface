@@ -26,6 +26,22 @@
             util.formatDate = function (date) {
                 return date.getFullYear() + '-' + util.twoDigits(date.getMonth() + 1) + '-' + util.twoDigits(date.getDate());
             };
+            util.longTrafo = function (lat) {
+                if (Math.abs(lat) >= 180.0) {
+                    if (lat > 0) {
+                        return -180.0 + lat % 180.0;
+                    }
+                    else {
+                        return 180.0 + lat % 180.0;
+                    }
+                }
+                else {
+                    return lat;
+                }
+            };
+            util.clip = function(x, min, max) {
+                Math.max(Math.min(x, max), min);
+            };
             return util;
         }])
         .factory('NmdcModel', ['$http', function ($http) {
@@ -82,10 +98,11 @@
             $scope.ctrl = ctrl;
             ctrl.model = Model;
         }])
-        .controller('NmdcSearchController', ['$scope', '$http', '$q', 'NmdcModel', function ($scope, $http, $q, Model) {
+        .controller('NmdcSearchController', ['$scope', '$http', '$q', 'NmdcModel', function ($scope, $http, $q, Model, Utils) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
+            ctrl.utils = Utils;
 
             ctrl.isSearching = false;
             var cancelSearch = function () {};
@@ -113,35 +130,13 @@
                     }
                     if (Model.search.coverage.geographical.use && Model.search.coverage.geographical.coordinates.length > 0) {
                         var coordinates = [];
-                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(coordTrafo(point.lng, 180) + ' ' + clip(point.lat, -90, 90)); });
+                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(Utils.longTrafo(point.lng) + ' ' + Utils.clip(point.lat, -90.0, 90.0));});
                         var first = Model.search.coverage.geographical.coordinates[0];
-                        coordinates.push(coordTrafo(first.lng, 180) + ' ' + clip(first.lat, -90, 90));
+                        coordinates.push(Utils.longTrafo(first.lng) + ' ' + Utils.clip(first.lat, -90.0, 90.0));
                         terms.push('location_rpt:"' + Model.search.coverage.geographical.operation + '(POLYGON((' + coordinates.join(',') + ')))"');
                     }
+                    console.log(terms.join(' AND '));
                     return terms.join(' AND ');
-                }
-
-                function coordTrafo(a, n)
-                {
-                    console.log(a);
-                    if (Math.abs(a) >= n)
-                    {
-                        if (a > 0)
-                        {
-                            return -180 + a % n;
-                        }
-                        else{
-                            return 180 + a % n;
-                        }
-                    }
-                    else{
-                        return a;
-                    }
-                }
-
-                function clip(a, min, max)
-                {
-                    return Math.max(Math.min(a, max), min);
                 }
 
                 var query = getQuery();
