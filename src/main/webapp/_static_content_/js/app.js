@@ -40,7 +40,7 @@
                 }
             };
             util.clip = function(x, min, max) {
-                Math.max(Math.min(x, max), min);
+                return Math.max(Math.min(x, max), min);
             };
             return util;
         }])
@@ -98,11 +98,11 @@
             $scope.ctrl = ctrl;
             ctrl.model = Model;
         }])
-        .controller('NmdcSearchController', ['$scope', '$http', '$q', 'NmdcModel', function ($scope, $http, $q, Model, Utils) {
+        .controller('NmdcSearchController', ['$scope', '$http', '$q', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $q, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
-            ctrl.utils = Utils;
+            ctrl.util = Util;
 
             ctrl.isSearching = false;
             var cancelSearch = function () {};
@@ -130,9 +130,9 @@
                     }
                     if (Model.search.coverage.geographical.use && Model.search.coverage.geographical.coordinates.length > 0) {
                         var coordinates = [];
-                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(Utils.longTrafo(point.lng) + ' ' + Utils.clip(point.lat, -90.0, 90.0));});
+                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(ctrl.util.longTrafo(point.lng) + ' ' + ctrl.util.clip(point.lat, -90.0, 90.0));});
                         var first = Model.search.coverage.geographical.coordinates[0];
-                        coordinates.push(Utils.longTrafo(first.lng) + ' ' + Utils.clip(first.lat, -90.0, 90.0));
+                        coordinates.push(ctrl.util.longTrafo(first.lng) + ' ' + ctrl.util.clip(first.lat, -90.0, 90.0));
                         terms.push('location_rpt:"' + Model.search.coverage.geographical.operation + '(POLYGON((' + coordinates.join(',') + ')))"');
                     }
                     console.log(terms.join(' AND '));
