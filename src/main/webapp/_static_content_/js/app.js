@@ -135,7 +135,6 @@
                         coordinates.push(ctrl.util.longTrafo(first.lng) + ' ' + ctrl.util.clip(first.lat, -90.0, 90.0));
                         terms.push('location_rpt:"' + Model.search.coverage.geographical.operation + '(POLYGON((' + coordinates.join(',') + ')))"');
                     }
-                    console.log(terms.join(' AND '));
                     return terms.join(' AND ');
                 }
 
