@@ -42,6 +42,43 @@
             util.clip = function(x, min, max) {
                 return Math.max(Math.min(x, max), min);
             };
+            util.relativeCCW = function (x1, y1, x2, y2, px, py) {
+                x2 -= x1;
+                y2 -= y1;
+                px -= x1;
+                py -= y1;
+                var ccw = px * y2 - py * x2;
+                if (ccw == 0) {
+                    ccw = px * x2 + py * y2;
+                    if (ccw > 0) {
+                        px -= x2;
+                        py -= y2;
+                        ccw = px * x2 + py * y2;
+                        if (ccw < 0) {
+                            ccw = 0;
+                        }
+                    }
+                }
+                return ccw < 0 ? -1 : (ccw > 0 ? 1 : 0);
+            };
+            util.linesIntersect = function (x1, y1, x2, y2, x3, y3, x4, y4) {
+                return util.relativeCCW(x1, y1, x2, y2, x3, y3) * util.relativeCCW(x1, y1, x2, y2, x4, y4) < 0 &&
+                    util.relativeCCW(x3, y3, x4, y4, x1, y1) * util.relativeCCW(x3, y3, x4, y4, x2, y2) < 0;
+            };
+            util.latLngLinesIntersect = function (a1, a2, b1, b2) {
+                return util.linesIntersect(a1.lng, a1.lat, a2.lng, a2.lat, b1.lng, b1.lat, b2.lng, b2.lat);
+            };
+            util.polygonSelfIntersects = function (coordinates) {
+                var n = coordinates.length;
+                for (var i = 0; i < n; i++) {
+                    for (var j = i + 1; j < n; j++) {
+                        if (util.latLngLinesIntersect(coordinates[i], coordinates[(i + 1) % n], coordinates[j], coordinates[(j + 1) % n])) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
             return util;
         }])
         .factory('NmdcModel', ['$http', function ($http) {
@@ -188,7 +225,7 @@
             }, true);
             $scope.$on('$destroy', cancelSearch);
         }])
-        .directive('nmdcMap', ['NmdcModel', function (Model) {
+        .directive('nmdcMap', ['$timeout', 'NmdcModel', 'NmdcUtil', function ($timeout, Model, Util) {
             return {
                 restrict: 'A',
                 link: function (scope, element, attrs) {
@@ -243,7 +280,14 @@
                         itemGroup.addLayer(layer);
                         layer.editing.enable();
                         layer.on('edit', function () {
-                            setCoordinates(layer.getLatLngs());
+                            if (Model.search.coverage.geographical.type == 'polygon' && Util.polygonSelfIntersects(layer.getLatLngs())) {
+                                $timeout(function () {
+                                    itemGroup.clearLayers();
+                                    addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
+                                });
+                            } else {
+                                setCoordinates(layer.getLatLngs());
+                            }
                         });
                     }
 
@@ -260,12 +304,12 @@
 
                     function setCoordinates(coordinates) {
                         scope.$apply(function () {
-                            Model.search.coverage.geographical.coordinates = coordinates.slice();
+                            Model.search.coverage.geographical.coordinates = angular.copy(coordinates);
                         });
                     }
 
                     function init() {
-                        var coordinates = Model.search.coverage.geographical.coordinates;
+                        var coordinates = angular.copy(Model.search.coverage.geographical.coordinates);
                         var type = Model.search.coverage.geographical.type;
                         if (type == 'rectangle') addItem(L.rectangle(coordinates));
                         if (type == 'polygon') addItem(L.polygon(coordinates));
