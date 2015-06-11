@@ -198,7 +198,7 @@
                     var itemGroup = L.featureGroup();
                     map.addLayer(itemGroup);
 
-                    var drawerOptions = {shapeOptions: {color: '#03f'}};
+                    var drawerOptions = {shapeOptions: {color: '#03f'}, allowIntersection: false};
                     var rectangleDrawer = new L.Draw.Rectangle(map, drawerOptions);
                     var polygonDrawer = new L.Draw.Polygon(map, drawerOptions);
 
