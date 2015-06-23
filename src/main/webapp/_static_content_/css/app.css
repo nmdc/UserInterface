@@ -7,6 +7,10 @@
     margin: 25px 0;
 }
 
+.nmdc-item:hover {
+    background-color: #eee;
+}
+
 .nmdc-item h4 {
     margin-bottom: 0;
 }

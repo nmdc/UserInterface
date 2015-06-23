@@ -215,6 +215,13 @@
                 }
             };
 
+            ctrl.mouseEnterItem = function (item) {
+                ctrl.marker = item.location_rpt;
+            };
+            ctrl.mouseLeaveItem = function () {
+                delete ctrl.marker;
+            };
+
             $scope.$watch('ctrl.model.search.currentPage', function (newValue, oldValue) {
                 if (newValue === oldValue) return;
                 ctrl.search(true);
@@ -227,13 +234,17 @@
         }])
         .directive('nmdcMap', ['$timeout', 'NmdcModel', 'NmdcUtil', function ($timeout, Model, Util) {
             return {
-                restrict: 'A',
+                restrict: 'E',
+                scope: {
+                    marker: '='
+                },
+                template: '<div id="nmdc-map"></div>',
                 link: function (scope, element, attrs) {
-                    var map = L.map(attrs.id, Model.map.options);
+                    var map = L.map('nmdc-map', Model.map.options);
                     map.addLayer(L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap contributors'}));
 
-                    var itemGroup = L.featureGroup();
-                    map.addLayer(itemGroup);
+                    var itemGroup = L.featureGroup().addTo(map);
+                    var markerGroup = L.featureGroup().addTo(map);
 
                     var drawerOptions = {shapeOptions: {color: '#03f'}, allowIntersection: false};
                     var rectangleDrawer = new L.Draw.Rectangle(map, drawerOptions);
@@ -308,6 +319,26 @@
                         });
                     }
 
+                    function parseCoordinates(coordinates) {
+                        var result = [];
+                        coordinates.split(',').forEach(function (p) {
+                            var parts = p.split(' ');
+                            result.push(L.latLng(parseFloat(parts[1]), parseFloat(parts[0])));
+                        });
+                        return result;
+                    }
+
+                    function updateMarker(marker) {
+                        markerGroup.clearLayers();
+                        if (marker) {
+                            if (marker.indexOf('POLYGON((') === 0) {
+                                markerGroup.addLayer(L.polygon(parseCoordinates(marker.substring(9, marker.length - 2))));
+                            } else {
+                                markerGroup.addLayer(L.marker(parseCoordinates(marker)[0]));
+                            }
+                        }
+                    }
+
                     function init() {
                         var coordinates = angular.copy(Model.search.coverage.geographical.coordinates);
                         var type = Model.search.coverage.geographical.type;
@@ -317,6 +348,10 @@
                     }
 
                     init();
+
+                    scope.$watch('marker', function () {
+                        updateMarker(scope.marker);
+                    });
                 }
             };
         }])
