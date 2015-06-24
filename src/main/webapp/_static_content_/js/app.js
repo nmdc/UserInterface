@@ -387,12 +387,14 @@
         .directive('nmdcExpansion', [function () {
             return {
                 restrict: 'E',
+                transclude: true,
                 scope: {
                     expandable: '='
                 },
                 template: '<a class="nmdc-expansion" href="" ng-click="expandable.expanded = !expandable.expanded">' +
-                '<span ng-hide="expandable.expanded">+</span>' +
-                '<span ng-show="expandable.expanded">−</span>' +
+                '<span class="nmdc-expansion-icon" ng-hide="expandable.expanded">+</span>' +
+                '<span class="nmdc-expansion-icon" ng-show="expandable.expanded">−</span>' +
+                '<ng-transclude></ng-transclude>' +
                 '</a>'
             };
         }])

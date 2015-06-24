@@ -3,7 +3,7 @@
     <div class="col-sm-2">
         <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
-            <h4><nmdc-expansion expandable="facet"></nmdc-expansion> {{facet.name}} ({{facet.matches}})</h4>
+            <h4><nmdc-expansion expandable="facet"> {{facet.name}} ({{facet.matches}})</nmdc-expansion></h4>
             <div ng-if="facet.expanded">
                 <div class="checkbox" ng-repeat="child in facet.children">
                     <label>
@@ -16,7 +16,7 @@
 
     <div class="col-sm-2 col-sm-push-8">
         <div class="nmdc-coverage">
-            <h4><nmdc-expansion expandable="ctrl.model.search.coverage.geographical"></nmdc-expansion> Geographical coverage</h4>
+            <h4><nmdc-expansion expandable="ctrl.model.search.coverage.geographical"> Geographical coverage</nmdc-expansion></h4>
             <div ng-if="ctrl.model.search.coverage.geographical.expanded">
                 <div class="form-horizontal">
                     <div class="form-group">
@@ -49,7 +49,7 @@
         </div>
 
         <div class="nmdc-coverage">
-            <h4><nmdc-expansion expandable="ctrl.model.search.coverage.temporal"></nmdc-expansion> Temporal coverage</h4>
+            <h4><nmdc-expansion expandable="ctrl.model.search.coverage.temporal"> Temporal coverage</nmdc-expansion></h4>
             <div ng-if="ctrl.model.search.coverage.temporal.expanded">
                 <div class="form-horizontal">
                     <div class="form-group">

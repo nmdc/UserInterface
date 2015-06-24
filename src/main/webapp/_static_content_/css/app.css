@@ -63,12 +63,15 @@
 
 a.nmdc-expansion {
     text-decoration: none;
+    color: black;
+}
+
+a.nmdc-expansion span.nmdc-expansion-icon {
     width: 18px;
     height: 18px;
     display: inline-block;
     border: 1px solid lightgray;
     text-align: center;
-    color: black;
     border-radius: 4px;
 }
 
