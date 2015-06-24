@@ -90,14 +90,14 @@
                     query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
                         geographical: {
                             expanded: true,
-                            use: false,
+                            selected: false,
                             operation: 'IsWithin',
                             type: 'mapBoundingBox',
                             coordinates: []
                         },
                         temporal: {
                             expanded: true,
-                            use: false,
+                            selected: false,
                             beginDate: new Date(1800, 0, 1),
                             endDate: new Date()
                         }
@@ -182,7 +182,7 @@
                     if (Model.search.text) {
                         terms.push('"' + Model.search.text + '"');
                     }
-                    if (Model.search.coverage.geographical.use && Model.search.coverage.geographical.coordinates.length > 0) {
+                    if (Model.search.coverage.geographical.selected && Model.search.coverage.geographical.coordinates.length > 0) {
                         var coordinates = [];
                         Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(ctrl.util.longTrafo(point.lng) + ' ' + ctrl.util.clip(point.lat, -90.0, 90.0));});
                         var first = Model.search.coverage.geographical.coordinates[0];

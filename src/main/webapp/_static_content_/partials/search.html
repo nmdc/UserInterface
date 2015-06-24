@@ -37,7 +37,7 @@
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.use"> Filter by
+                        <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.selected"> Filter by
                         <span ng-switch="ctrl.model.search.coverage.geographical.type">
                             <span ng-switch-when="rectangle">rectangle</span>
                             <span ng-switch-when="polygon">polygon</span>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.use"> Filter by temporal coverage
+                        <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.selected"> Filter by temporal coverage
                     </label>
                 </div>
             </div>
@@ -100,6 +100,16 @@
             </div>
         </form>
         <div>
+            <div class="nmdc-selected-facets">
+                Selected facets:
+                <span ng-repeat="facet in ctrl.model.facets">
+                    <span ng-repeat="child in facet.children | filter:{selected: true}">
+                        <a class="btn btn-default btn-xs" href="" ng-click="child.selected = false; ctrl.search()">{{child.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                    </span>
+                </span>
+                <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.temporal.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.temporal.selected">Temporal coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+            </div>
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>

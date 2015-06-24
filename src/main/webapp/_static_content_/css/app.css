@@ -19,6 +19,20 @@
     margin: 10px 0;
 }
 
+.nmdc-selected-facets {
+    margin: 10px 0;
+    min-height: 23px;
+}
+
+.nmdc-selected-facets a {
+    margin-bottom: 1px;
+}
+
+.nmdc-deselect-facet {
+    color: #cc0000;
+    margin-left: 3px;
+}
+
 .nmdc-pagination {
     margin: 0;
 }
