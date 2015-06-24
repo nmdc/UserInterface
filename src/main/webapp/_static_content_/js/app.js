@@ -84,16 +84,19 @@
         .factory('NmdcModel', ['$http', function ($http) {
             var model = {
                 ready: false,
+                options: {facetExpansionLevel: 1},
                 facets: [],
                 search: {
                     query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
                         geographical: {
+                            expanded: true,
                             use: false,
                             operation: 'IsWithin',
                             type: 'mapBoundingBox',
                             coordinates: []
                         },
                         temporal: {
+                            expanded: true,
                             use: false,
                             beginDate: new Date(1800, 0, 1),
                             endDate: new Date()
@@ -104,10 +107,24 @@
                 map: {options: {center: L.latLng(60, 0), zoom: 3}}
             };
 
+            function expandFacets(facets, level) {
+                if (facets && level > 0) {
+                    facets.forEach(function (facet) {
+                        facet.expanded = true;
+                        expandFacets(facet.children, level - 1);
+                    });
+                }
+            }
+
+            function init() {
+                model.ready = true;
+                expandFacets(model.facets, model.options.facetExpansionLevel);
+            }
+
             $http.get(apiPath + 'getFacets')
                 .success(function (data) {
                     angular.extend(model, data);
-                    model.ready = true;
+                    init();
                 })
                 .error(function (data, status) {
                     model.facets.error = {header: 'Error getting facets', status: status, response: data};
@@ -365,6 +382,18 @@
                 '<div><strong>Status:</strong> {{nmdcError.status}}</div>' +
                 '<div><strong>Message:</strong> {{nmdcError.response.message}}</div>' +
                 '</alert>'
+            };
+        }])
+        .directive('nmdcExpansion', [function () {
+            return {
+                restrict: 'E',
+                scope: {
+                    expandable: '='
+                },
+                template: '<a class="nmdc-expansion" href="" ng-click="expandable.expanded = !expandable.expanded">' +
+                '<span ng-hide="expandable.expanded">+</span>' +
+                '<span ng-show="expandable.expanded">−</span>' +
+                '</a>'
             };
         }])
         .controller('NmdcBasketController', ['$scope', 'NmdcModel', function ($scope, Model) {

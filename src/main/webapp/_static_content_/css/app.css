@@ -61,6 +61,17 @@
     z-index: 2;
 }
 
+a.nmdc-expansion {
+    text-decoration: none;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    border: 1px solid lightgray;
+    text-align: center;
+    color: black;
+    border-radius: 4px;
+}
+
 .nmdc-logo-container a {
     margin: 5px;
 }
