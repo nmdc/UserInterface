@@ -81,7 +81,7 @@
             };
             return util;
         }])
-        .factory('NmdcModel', ['$http', function ($http) {
+        .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
             var model = {
                 ready: false,
                 options: {facetExpansionLevel: 1},
@@ -119,6 +119,11 @@
             function init() {
                 model.ready = true;
                 expandFacets(model.facets, model.options.facetExpansionLevel);
+                if ($window.innerWidth < 768) {
+                    model.facets.forEach(function (facet) { facet.expanded = false; });
+                    model.search.coverage.geographical.expanded = false;
+                    model.search.coverage.temporal.expanded = false;
+                }
             }
 
             $http.get(apiPath + 'getFacets')
