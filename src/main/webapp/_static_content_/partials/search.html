@@ -113,7 +113,7 @@
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">{{ctrl.model.search.response.matches}} data sets found</div>
-            <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.mouseEnterItem(item)" ng-mouseleave="ctrl.mouseLeaveItem()">
+            <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
                 <h4><a ng-href="#/details/{{item.Entry_ID}}">{{item.Entry_Title}}</a></h4>
 
                 <p>

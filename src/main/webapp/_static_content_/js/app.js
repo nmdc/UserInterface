@@ -213,6 +213,7 @@
 
                 function setResponse(response) {
                     ctrl.isSearching = false;
+                    ctrl.removeMarker();
                     Model.search.response = response;
                     delete Model.search.error;
                     if (!isPageSearch) Model.search.currentPage = 0;
@@ -237,10 +238,10 @@
                 }
             };
 
-            ctrl.mouseEnterItem = function (item) {
+            ctrl.addMarker = function (item) {
                 ctrl.marker = item.location_rpt;
             };
-            ctrl.mouseLeaveItem = function () {
+            ctrl.removeMarker = function () {
                 delete ctrl.marker;
             };
 
