@@ -32,10 +32,11 @@ public class ServerMain {
         String serverUrl = System.getProperty("no.nmdc.server.url");
         Object resource = serverUrl != null ? new RemoteServerResource(serverUrl) : new LocalFilesResource(filesDir);
 
-        HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(uri.resolve(RemoteServerResource.API_PATH), new JaxRsApplication(resource));
+        HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(uri.resolve(RemoteServerResource.API_PATH), new JaxRsApplication(resource), false);
         addNetworkListenersToLocalAddresses(httpServer, uri.getPort());
         httpServer.getServerConfiguration().addHttpHandler(new StaticHttpHandler(webAppDir.toString()), "/");
         httpServer.getListeners().forEach(listener -> listener.getFileCache().setEnabled(false));
+        httpServer.start();
 
         System.err.println();
         System.err.println("Web app dir: " + webAppDir);

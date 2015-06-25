@@ -4,7 +4,7 @@
 
     var apiPath = 'metadata-api/';
 
-    angular.module('NmdcApp', ['ngRoute', 'ngResource', 'ui.bootstrap'])
+    angular.module('NmdcApp', ['ngAnimate', 'ngResource', 'ngRoute', 'ui.bootstrap'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider
                 .when('/', {templateUrl: '_static_content_/partials/search.html'})
@@ -82,6 +82,9 @@
             return util;
         }])
         .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
+
+            var defaultExpanded = $window.innerWidth >= 768;
+
             var model = {
                 ready: false,
                 options: {facetExpansionLevel: 1},
@@ -89,14 +92,14 @@
                 search: {
                     query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
                         geographical: {
-                            expanded: true,
+                            expanded: defaultExpanded,
                             selected: false,
                             operation: 'IsWithin',
                             type: 'mapBoundingBox',
                             coordinates: []
                         },
                         temporal: {
-                            expanded: true,
+                            expanded: defaultExpanded,
                             selected: false,
                             beginDate: new Date(1800, 0, 1),
                             endDate: new Date()
@@ -119,11 +122,8 @@
             function init() {
                 model.ready = true;
                 expandFacets(model.facets, model.options.facetExpansionLevel);
-                if ($window.innerWidth < 768) {
-                    model.facets.forEach(function (facet) { facet.expanded = false; });
-                    model.search.coverage.geographical.expanded = false;
-                    model.search.coverage.temporal.expanded = false;
-                }
+                model.facets.forEach(function (facet) { facet.expanded = defaultExpanded; });
+                console.log($window.innerHeight)
             }
 
             $http.get(apiPath + 'getFacets')
