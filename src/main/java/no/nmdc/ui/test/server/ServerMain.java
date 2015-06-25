@@ -1,16 +1,20 @@
 package no.nmdc.ui.test.server;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +33,7 @@ public class ServerMain {
         Object resource = serverUrl != null ? new RemoteServerResource(serverUrl) : new LocalFilesResource(filesDir);
 
         HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(uri.resolve(RemoteServerResource.API_PATH), new JaxRsApplication(resource));
+        addNetworkListenersToLocalAddresses(httpServer, uri.getPort());
         httpServer.getServerConfiguration().addHttpHandler(new StaticHttpHandler(webAppDir.toString()), "/");
         httpServer.getListeners().forEach(listener -> listener.getFileCache().setEnabled(false));
 
@@ -48,5 +53,13 @@ public class ServerMain {
 
         System.err.println("Stopping server");
         httpServer.shutdownNow();
+    }
+
+    private static void addNetworkListenersToLocalAddresses(HttpServer aHttpServer, int aPort) throws SocketException {
+        Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
+                .flatMap(networkInterface -> Collections.list(networkInterface.getInetAddresses()).stream())
+                .filter(inetAddress -> !inetAddress.isLoopbackAddress())
+                .map(inetAddress -> new NetworkListener("grizzly_" + inetAddress.getHostAddress(), inetAddress.getHostAddress(), aPort))
+                .forEach(aHttpServer::addListener);
     }
 }
