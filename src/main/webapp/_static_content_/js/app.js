@@ -374,6 +374,9 @@
                     scope.$watch('marker', function () {
                         updateMarker(scope.marker);
                     });
+                    scope.$on('$destroy', function () {
+                        map.remove();
+                    });
                 }
             };
         }])
