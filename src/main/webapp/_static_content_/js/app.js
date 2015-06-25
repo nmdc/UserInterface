@@ -4,7 +4,7 @@
 
     var apiPath = 'metadata-api/';
 
-    angular.module('NmdcApp', ['ngAnimate', 'ngResource', 'ngRoute', 'ui.bootstrap'])
+    angular.module('NmdcApp', ['ngAnimate', 'ngRoute', 'ui.bootstrap'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider
                 .when('/', {templateUrl: '_static_content_/partials/search.html'})
