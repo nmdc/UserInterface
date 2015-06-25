@@ -123,7 +123,6 @@
                 model.ready = true;
                 expandFacets(model.facets, model.options.facetExpansionLevel);
                 model.facets.forEach(function (facet) { facet.expanded = defaultExpanded; });
-                console.log($window.innerHeight)
             }
 
             $http.get(apiPath + 'getFacets')
