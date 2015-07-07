@@ -5,11 +5,14 @@ import com.google.common.io.ByteStreams;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -34,10 +37,13 @@ public class RemoteServerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public StreamingOutput getTotalDistance(@Context UriInfo aUriInfo) throws MalformedURLException {
         URI relativeUri = aUriInfo.getBaseUri().relativize(aUriInfo.getRequestUri());
-        URL url = new URL(serverUrl + API_PATH + '/' + relativeUri);
-        return out -> {
-            try (InputStream in = url.openStream()) {
-                ByteStreams.copy(in, out);
+        final URL url = new URL(serverUrl + API_PATH + '/' + relativeUri);
+        return new StreamingOutput() {
+            @Override
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                try (InputStream in = url.openStream()) {
+                    ByteStreams.copy(in, out);
+                }
             }
         };
     }

@@ -7,6 +7,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URI;
@@ -14,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Enumeration;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +36,9 @@ public class ServerMain {
         HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(uri.resolve(RemoteServerResource.API_PATH), new JaxRsApplication(resource), false);
         addNetworkListenersToLocalAddresses(httpServer, uri.getPort());
         httpServer.getServerConfiguration().addHttpHandler(new StaticHttpHandler(webAppDir.toString()), "/");
-        httpServer.getListeners().forEach(listener -> listener.getFileCache().setEnabled(false));
+        for (NetworkListener listener : httpServer.getListeners()) {
+            listener.getFileCache().setEnabled(false);
+        }
         httpServer.start();
 
         System.err.println();
@@ -57,10 +60,16 @@ public class ServerMain {
     }
 
     private static void addNetworkListenersToLocalAddresses(HttpServer aHttpServer, int aPort) throws SocketException {
-        Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
-                .flatMap(networkInterface -> Collections.list(networkInterface.getInetAddresses()).stream())
-                .filter(inetAddress -> !inetAddress.isLoopbackAddress())
-                .map(inetAddress -> new NetworkListener("grizzly_" + inetAddress.getHostAddress(), inetAddress.getHostAddress(), aPort))
-                .forEach(aHttpServer::addListener);
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        while (networkInterfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = networkInterfaces.nextElement();
+            Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+            while (inetAddresses.hasMoreElements()) {
+                InetAddress inetAddress = inetAddresses.nextElement();
+                if (!inetAddress.isLoopbackAddress()) {
+                    aHttpServer.addListener(new NetworkListener("grizzly_" + inetAddress.getHostAddress(), inetAddress.getHostAddress(), aPort));
+                }
+            }
+        }
     }
 }

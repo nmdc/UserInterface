@@ -2,13 +2,12 @@ package no.nmdc.ui.test.server;
 
 import com.google.common.io.ByteStreams;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 
 /**
@@ -27,11 +26,14 @@ public class LocalFilesResource {
     @GET
     @Path("{request}")
     @Produces(MediaType.APPLICATION_JSON)
-    public StreamingOutput getTotalDistance(@PathParam("request") String aRequest) throws InterruptedException {
+    public StreamingOutput getTotalDistance(@PathParam("request") final String aRequest) throws InterruptedException {
         if (aRequest.equals("search")) Thread.sleep(1000); // Simulate server response time
-        return out -> {
-            try (InputStream in = Files.newInputStream(directory.resolve(aRequest + ".json"))) {
-                ByteStreams.copy(in, out);
+        return new StreamingOutput() {
+            @Override
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                try (InputStream in = Files.newInputStream(directory.resolve(aRequest + ".json"))) {
+                    ByteStreams.copy(in, out);
+                }
             }
         };
     }
