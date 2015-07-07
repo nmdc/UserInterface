@@ -13,8 +13,8 @@ repositories {
 
 dependencies {
     compile 'com.google.guava:guava:18.0'
-    compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.18'
-    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.18'
+    compile 'org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.19'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.19'
 }
 
 tasks.withType(JavaCompile) {
