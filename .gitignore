@@ -12,3 +12,4 @@ release.properties
 .idea/workspace.xml
 .gradle
 build
+/out
