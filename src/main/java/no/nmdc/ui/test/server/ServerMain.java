@@ -23,6 +23,8 @@ import java.util.Enumeration;
  * Date: 24.04.2015
  */
 public class ServerMain {
+    static final String SERVER_URL_PROPERTY = "no.nmdc.server.url";
+
     public static void main(String[] args) throws IOException {
         Path filesDir = Paths.get("files").toAbsolutePath();
         Path webAppDir = Paths.get("src/main/webapp").toAbsolutePath();
@@ -30,7 +32,7 @@ public class ServerMain {
 
         URI uri = URI.create("http://localhost:8080/");
 
-        String serverUrl = System.getProperty("no.nmdc.server.url");
+        String serverUrl = System.getProperty(SERVER_URL_PROPERTY);
         Object resource = serverUrl != null ? new RemoteServerResource(serverUrl) : new LocalFilesResource(filesDir);
 
         HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(uri.resolve(RemoteServerResource.API_PATH), new JaxRsApplication(resource), false);

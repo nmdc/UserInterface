@@ -56,5 +56,8 @@
     <orderEntry type="library" exported="" name="Gradle: org.glassfish.jersey.media:jersey-media-jaxb:2.19" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.glassfish.hk2:hk2-utils:2.4.0-b25" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b25" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.glassfish.jersey.containers:jersey-container-servlet:2.19" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.glassfish.jersey.containers:jersey-container-servlet-core:2.19" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: javax.servlet:javax.servlet-api:3.0.1" level="project" />
   </component>
 </module>
