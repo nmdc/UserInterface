@@ -89,6 +89,7 @@
                 ready: false,
                 options: {facetExpansionLevel: 1},
                 facets: [],
+                hasSearched: false,
                 search: {
                     query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
                         geographical: {
@@ -202,6 +203,7 @@
                 console.log('q=' + query);
 
                 cancelSearch();
+                Model.hasSearched = true;
                 ctrl.isSearching = true;
                 var canceller = $q.defer();
                 var isCancelled = false;

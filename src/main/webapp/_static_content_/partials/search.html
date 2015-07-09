@@ -106,6 +106,14 @@
                 <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                 <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.temporal.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.temporal.selected">Temporal coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
             </div>
+            <div ng-hide="ctrl.model.hasSearched">
+                To search for data sets, do any of the following:
+                <ul>
+                    <li>Select one or more facets</li>
+                    <li>Type into the free text search box</li>
+                    <li>Specify geographical or temporal coverage</li>
+                </ul>
+            </div>
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">
