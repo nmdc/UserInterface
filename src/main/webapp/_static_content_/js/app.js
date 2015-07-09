@@ -48,7 +48,7 @@
                 px -= x1;
                 py -= y1;
                 var ccw = px * y2 - py * x2;
-                if (ccw == 0) {
+                if (ccw === 0) {
                     ccw = px * x2 + py * y2;
                     if (ccw > 0) {
                         px -= x2;
@@ -198,7 +198,7 @@
                 }
 
                 var query = getQuery();
-                if (Model.search.query == query) return;
+                if (Model.search.query === query) return;
                 Model.search.query = query;
                 console.log('q=' + query);
 
@@ -300,7 +300,7 @@
                     map.on('moveend', function () {
                         Model.map.options.center = map.getCenter();
                         Model.map.options.zoom = map.getZoom();
-                        if (Model.search.coverage.geographical.type == 'mapBoundingBox') {
+                        if (Model.search.coverage.geographical.type === 'mapBoundingBox') {
                             setCoordinates(L.rectangle(map.getBounds()).getLatLngs());
                         }
                     });
@@ -315,7 +315,7 @@
                         itemGroup.addLayer(layer);
                         layer.editing.enable();
                         layer.on('edit', function () {
-                            if (Model.search.coverage.geographical.type == 'polygon' && Util.polygonSelfIntersects(layer.getLatLngs())) {
+                            if (Model.search.coverage.geographical.type === 'polygon' && Util.polygonSelfIntersects(layer.getLatLngs())) {
                                 $timeout(function () {
                                     itemGroup.clearLayers();
                                     addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
@@ -366,9 +366,9 @@
                     function init() {
                         var coordinates = angular.copy(Model.search.coverage.geographical.coordinates);
                         var type = Model.search.coverage.geographical.type;
-                        if (type == 'rectangle') addItem(L.rectangle(coordinates));
-                        if (type == 'polygon') addItem(L.polygon(coordinates));
-                        if (type == 'mapBoundingBox') Model.search.coverage.geographical.coordinates = L.rectangle(map.getBounds()).getLatLngs();
+                        if (type === 'rectangle') addItem(L.rectangle(coordinates));
+                        if (type === 'polygon') addItem(L.polygon(coordinates));
+                        if (type === 'mapBoundingBox') Model.search.coverage.geographical.coordinates = L.rectangle(map.getBounds()).getLatLngs();
                     }
 
                     init();
