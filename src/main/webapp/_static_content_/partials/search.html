@@ -133,12 +133,12 @@
                               when="{'0': 'No data sets', '1': '1 data set', 'other': '{} data sets'}"></ng-pluralize> found
             </div>
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
-                <h4><a ng-href="#/details/{{item.Entry_ID}}">{{item.Entry_Title}}</a></h4>
+                <h4><a ng-href="#/details/{{item.Entry_Title}}">{{item.Entry_Title}}</a></h4>
 
                 <p>
                     {{item.Data_Summary}}
                     <br>
-                    <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID}}">Details</a>
+                    <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_Title}}">Details</a>
                     <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
                     <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
                 </p>

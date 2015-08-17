@@ -450,9 +450,9 @@
             ctrl.model = Model;
             ctrl.id = $routeParams.id;
 
-            $http.get(apiPath + 'getmetadatadetail?doi=' + ctrl.id)
+            $http.get(apiPath + 'search?q="' + ctrl.id + '"')
                 .success(function (data) {
-                    ctrl.details = data.data[0];
+                    ctrl.details = data.results[0];
                 })
                 .error(function (data, status) {
                     ctrl.error = {header: 'Error getting metadata details', status: status, response: data};
