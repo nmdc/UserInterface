@@ -54,6 +54,18 @@
                 </div>
                 <div class="form-horizontal">
                     <div class="form-group">
+                        <label for="operation" class="col-lg-4 control-label">Operation</label>
+
+                        <div class="col-lg-8">
+                            <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation">
+                                <option value="IsWithin">Is within</option>
+                                <option value="Intersects">Intersects</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal">
+                    <div class="form-group">
                         <label for="beginDate" class="col-lg-2 control-label">From</label>
 
                         <div class="col-lg-10">
@@ -117,7 +129,7 @@
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">
-                <ng-pluralize count="ctrl.model.search.response.matches"
+                <ng-pluralize count="ctrl.model.search.response.numFound"
                               when="{'0': 'No data sets', '1': '1 data set', 'other': '{} data sets'}"></ng-pluralize> found
             </div>
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
@@ -131,7 +143,7 @@
                     <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
                 </p>
             </div>
-            <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.matches" ng-model="ctrl.model.search.currentPage"
+            <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound" ng-model="ctrl.model.search.currentPage"
                         max-size="10" class="pagination-sm" boundary-links="true"></pagination>
         </div>
     </div>

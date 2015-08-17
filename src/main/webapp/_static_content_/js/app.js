@@ -20,11 +20,23 @@
         }])
         .factory('NmdcUtil', [function () {
             var util = {};
+            util.urlParametersToString = function (values) {
+                var string = '';
+                angular.forEach(values, function(value, key) {
+                    if (string.length > 0) string += '&';
+                    string += key + '=' + encodeURIComponent(value);
+                });
+                return string;
+            };
             util.twoDigits = function (x) {
                 return x < 10 ? '0' + x : x;
             };
             util.formatDate = function (date) {
                 return date.getFullYear() + '-' + util.twoDigits(date.getMonth() + 1) + '-' + util.twoDigits(date.getDate());
+            };
+            util.formatDateSearch = function (date) {
+                var str = date.toISOString();
+                return str.substring(0, str.length - 5) + 'Z';
             };
             util.longTrafo = function (lat) {
                 if (Math.abs(lat) >= 180.0) {
@@ -91,7 +103,7 @@
                 facets: [],
                 hasSearched: false,
                 search: {
-                    query: '', response: {}, itemsPerPage: 10, currentPage: 0, text: '', coverage: {
+                    queryParameters: {q: '', offset: 0}, response: {}, itemsPerPage: 10, currentPage: 1, text: '', coverage: {
                         geographical: {
                             expanded: defaultExpanded,
                             selected: false,
@@ -102,7 +114,8 @@
                         temporal: {
                             expanded: defaultExpanded,
                             selected: false,
-                            beginDate: new Date(1800, 0, 1),
+                            operation: 'IsWithin',
+                            beginDate: new Date(1500, 0, 1),
                             endDate: new Date()
                         }
                     }
@@ -171,7 +184,7 @@
                 ctrl.search();
             };
             ctrl.search = function (isPageSearch) {
-                function getQuery() {
+                function getSolrQuery() {
                     var terms = [];
                     Model.facets.forEach(function (facet) {
                         var facetTerms = [];
@@ -197,10 +210,28 @@
                     return terms.join(' AND ');
                 }
 
-                var query = getQuery();
-                if (Model.search.query === query) return;
-                Model.search.query = query;
-                console.log('q=' + query);
+                function getQueryParameters() {
+                    var parameters = {};
+                    parameters.q = getSolrQuery();
+                    parameters.offset = (Model.search.currentPage - 1) * Model.search.itemsPerPage;
+                    if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate != null || Model.search.coverage.temporal.endDate != null)) {
+                        if (Model.search.coverage.temporal.beginDate != null) {
+                            parameters.beginDate = Util.formatDateSearch(Model.search.coverage.temporal.beginDate);
+                        }
+                        if (Model.search.coverage.temporal.endDate != null) {
+                            parameters.endDate = Util.formatDateSearch(Model.search.coverage.temporal.endDate);
+                        }
+                        if (Model.search.coverage.temporal.operation == 'IsWithin') {
+                            parameters.dateSearchMode = 'isWithin';
+                        }
+                    }
+                    return parameters;
+                }
+
+                var queryParameters = getQueryParameters();
+                if (angular.equals(Model.search.queryParameters, queryParameters)) return;
+                Model.search.queryParameters = queryParameters;
+                console.log(queryParameters);
 
                 cancelSearch();
                 Model.hasSearched = true;
@@ -217,10 +248,10 @@
                     ctrl.removeMarker();
                     Model.search.response = response;
                     delete Model.search.error;
-                    if (!isPageSearch) Model.search.currentPage = 0;
+                    if (!isPageSearch) Model.search.currentPage = 1;
                 }
 
-                $http.get(apiPath + 'search?q=' + encodeURIComponent(query), {timeout: canceller.promise})
+                $http.get(apiPath + 'search?' + Util.urlParametersToString(queryParameters), {timeout: canceller.promise})
                     .success(setResponse)
                     .error(function (data, status) {
                         if (isCancelled) return;
