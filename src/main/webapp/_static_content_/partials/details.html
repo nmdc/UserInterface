@@ -1,5 +1,5 @@
 <div ng-controller="NmdcDetailsController as ctrl">
-    <h2>{{ctrl.details.title}}</h2>
+    <h2>{{ctrl.details.Entry_Title}}</h2>
     <div nmdc-error="ctrl.error"></div>
     <div ng-show="ctrl.details">
         <table class="table table-condensed table-bordered table-striped">
@@ -11,8 +11,8 @@
         <p>
             <a class="btn btn-info btn-xs" target="_blank" ng-href="{{ctrl.details.Data_URL}}" download>Download</a>
             <a class="btn btn-info btn-xs" target="_blank" ng-href="{{ctrl.details.Data_URL}}">View</a>
-            <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[ctrl.id]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
-            <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[ctrl.id]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+            <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.add(ctrl.details)">Add to basket</a>
+            <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(ctrl.details)">Remove from basket</a>
         </p>
     </div>
     <p>
