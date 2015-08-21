@@ -442,9 +442,10 @@
                 '</a>'
             };
         }])
-        .controller('NmdcBasketController', ['$scope', 'NmdcModel', function ($scope, Model) {
+        .controller('NmdcBasketController', ['$scope', 'NmdcModel', 'NmdcUtil', function ($scope, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
+            ctrl.util = Util;
             ctrl.model = Model;
         }])
         .controller('NmdcDetailsController', ['$scope', '$http', '$routeParams', 'NmdcModel', function ($scope, $http, $routeParams, Model) {
