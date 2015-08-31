@@ -94,6 +94,18 @@
                 }
                 return false;
             };
+            util.stringToArrayIfPossible = function (text) {
+                if (text && text.charAt(0) === '[' && text.charAt(text.length - 1) === ']') {
+                    return text.substring(1, text.length - 1).split(/\s*,\s*/);
+                } else {
+                    return text;
+                }
+            };
+            util.adaptSearchResults = function (results) {
+                results.forEach(function (result) {
+                    result.Data_URL = util.stringToArrayIfPossible(result.Data_URL);
+                });
+            };
             return util;
         }])
         .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
@@ -254,6 +266,7 @@
                 function setResponse(response) {
                     ctrl.isSearching = false;
                     ctrl.removeMarker();
+                    Util.adaptSearchResults(response.results);
                     Model.search.response = response;
                     delete Model.search.error;
                     if (!isPageSearch) Model.search.currentPage = 1;
@@ -453,7 +466,7 @@
             ctrl.util = Util;
             ctrl.model = Model;
         }])
-        .controller('NmdcDetailsController', ['$scope', '$http', '$routeParams', 'NmdcModel', function ($scope, $http, $routeParams, Model) {
+        .controller('NmdcDetailsController', ['$scope', '$http', '$routeParams', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $routeParams, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
@@ -461,6 +474,7 @@
 
             $http.get(apiPath + 'search?q="' + ctrl.id + '"')
                 .success(function (data) {
+                    Util.adaptSearchResults(data.results);
                     ctrl.details = data.results[0];
                 })
                 .error(function (data, status) {

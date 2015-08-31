@@ -6,9 +6,11 @@
         <p>
             {{item.Data_Summary}}
             <br>
+            <span ng-repeat="url in item.Data_URL">
+                <a target="_blank" ng-href="{{url}}">{{url}}</a>
+                <br>
+            </span>
             <a class="btn btn-info btn-xs" ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">Details</a>
-            <a class="btn btn-info btn-xs" target="_blank" ng-href="{{item.Data_URL}}" download>Download</a>
-            <a class="btn btn-info btn-xs" target="_blank" ng-href="{{item.Data_URL}}">View</a>
             <a class="btn btn-info btn-xs" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
         </p>
     </div>

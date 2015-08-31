@@ -5,12 +5,16 @@
         <table class="table table-condensed table-bordered table-striped">
             <tr ng-repeat="(key, value) in ctrl.details">
                 <td>{{key}}</td>
-                <td>{{value}}</td>
+                <td ng-if="key != 'Data_URL'">{{value}}</td>
+                <td ng-if="key == 'Data_URL'">
+                    <span ng-repeat="url in value">
+                        <a target="_blank" ng-href="{{url}}">{{url}}</a>
+                        <br>
+                    </span>
+                </td>
             </tr>
         </table>
         <p>
-            <a class="btn btn-info btn-xs" target="_blank" ng-href="{{ctrl.details.Data_URL}}" download>Download</a>
-            <a class="btn btn-info btn-xs" target="_blank" ng-href="{{ctrl.details.Data_URL}}">View</a>
             <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.add(ctrl.details)">Add to basket</a>
             <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(ctrl.details)">Remove from basket</a>
         </p>
