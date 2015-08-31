@@ -95,13 +95,13 @@ a.nmdc-expansion span.nmdc-expansion-icon {
     max-height: 1500px;
 }
 
-.nmdc-expandable.ng-hide-add.ng-hide-add-active,
+.nmdc-expandable.ng-hide-add.ng-hide-animate,
 .nmdc-expandable.ng-leave {
     overflow: hidden;
     transition:all cubic-bezier(0, .85, 0.15, 1) 0.2s;
 }
 
-.nmdc-expandable.ng-hide-remove.ng-hide-remove-active,
+.nmdc-expandable.ng-hide-remove.ng-hide-animate,
 .nmdc-expandable.ng-enter {
     overflow: hidden;
     transition:all cubic-bezier(0.85, 0, 1, 0.15) 0.2s;
