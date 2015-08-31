@@ -173,7 +173,7 @@
             $scope.ctrl = ctrl;
             ctrl.model = Model;
         }])
-        .controller('NmdcSearchController', ['$scope', '$http', '$q', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $q, Model, Util) {
+        .controller('NmdcSearchController', ['$scope', '$http', '$q', '$log', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $q, $log, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
@@ -222,14 +222,14 @@
                     var parameters = {};
                     parameters.q = getSolrQuery();
                     parameters.offset = (Model.search.currentPage - 1) * Model.search.itemsPerPage;
-                    if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate != null || Model.search.coverage.temporal.endDate != null)) {
-                        if (Model.search.coverage.temporal.beginDate != null) {
+                    if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate !== null || Model.search.coverage.temporal.endDate !== null)) {
+                        if (Model.search.coverage.temporal.beginDate !== null) {
                             parameters.beginDate = Util.formatDateSearch(Model.search.coverage.temporal.beginDate);
                         }
-                        if (Model.search.coverage.temporal.endDate != null) {
+                        if (Model.search.coverage.temporal.endDate !== null) {
                             parameters.endDate = Util.formatDateSearch(Model.search.coverage.temporal.endDate);
                         }
-                        if (Model.search.coverage.temporal.operation == 'IsWithin') {
+                        if (Model.search.coverage.temporal.operation === 'IsWithin') {
                             parameters.dateSearchMode = 'isWithin';
                         }
                     }
@@ -239,7 +239,7 @@
                 var queryParameters = getQueryParameters();
                 if (angular.equals(Model.search.queryParameters, queryParameters)) return;
                 Model.search.queryParameters = queryParameters;
-                console.log(queryParameters);
+                $log.log(queryParameters);
 
                 cancelSearch();
                 Model.hasSearched = true;
