@@ -201,7 +201,12 @@
                         }
                     });
                     if (Model.search.text) {
-                        terms.push('"' + Model.search.text + '"');
+                        var words = Model.search.text.replace(/"/g, '').split(/ +/)
+                            .filter(function (word) { return word.length > 0; })
+                            .map(function (word) { return '*"' + word + '"*'; });
+                        var textTerm = words.join(' OR ');
+                        if (words.length > 1) textTerm = '(' + textTerm + ')';
+                        terms.push(textTerm);
                     }
                     if (Model.search.coverage.geographical.selected && Model.search.coverage.geographical.coordinates.length > 0) {
                         var coordinates = [];
