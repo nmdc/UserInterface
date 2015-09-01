@@ -1,5 +1,7 @@
 <div ng-controller="NmdcDetailsController as ctrl">
-    <h2>{{ctrl.details.Entry_Title}}</h2>
+    <h2><a class="btn btn-info btn-sm" ng-hide="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.add(ctrl.details)"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+        <a class="btn btn-warning btn-sm" ng-show="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(ctrl.details)"><span class="glyphicon glyphicon-remove"></span></a>
+        {{ctrl.details.Entry_Title}}</h2>
     <div nmdc-error="ctrl.error"></div>
     <div ng-show="ctrl.details">
         <table class="table table-condensed table-bordered table-striped">
@@ -14,10 +16,6 @@
                 </td>
             </tr>
         </table>
-        <p>
-            <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.add(ctrl.details)">Add to basket</a>
-            <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[ctrl.details.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(ctrl.details)">Remove from basket</a>
-        </p>
     </div>
     <p>
         <a class="btn btn-primary btn-xs" ng-href="#/">Go to search</a>

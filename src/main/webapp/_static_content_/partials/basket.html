@@ -2,7 +2,9 @@
     <h2>Basket</h2>
     <p ng-show="ctrl.model.basket.count == 0">Basket is empty</p>
     <div class="nmdc-item" ng-repeat="(id, item) in ctrl.model.basket.idToItem">
-        <h4><a ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">{{item.Entry_Title}}</a></h4>
+        <h4><a class="btn btn-warning btn-xs" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="btn btn-info btn-xs" ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">Details</a>
+            <a ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">{{item.Entry_Title}}</a></h4>
         <p>
             {{item.Data_Summary}}
             <br>
@@ -10,9 +12,9 @@
                 <a target="_blank" ng-href="{{url}}">{{url}}</a>
                 <br>
             </span>
-            <a class="btn btn-info btn-xs" ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">Details</a>
-            <a class="btn btn-info btn-xs" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
+
         </p>
+        <hr>
     </div>
     <p>
         <a class="btn btn-primary btn-xs" ng-href="#/">Go to search</a>

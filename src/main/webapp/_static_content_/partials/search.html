@@ -1,4 +1,4 @@
-<div class="row" ng-controller="NmdcSearchController as ctrl">
+<div class="row" ng-controller="NmdcSearchController as ctrl" xmlns:word-wrap="http://www.w3.org/1999/xhtml">
 
     <div class="col-sm-2">
         <div nmdc-error="ctrl.model.facets.error"></div>
@@ -133,18 +133,19 @@
                               when="{'0': 'No data sets', '1': '1 data set', 'other': '{} data sets'}"></ng-pluralize> found
             </div>
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
-                <h4><a ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">{{item.Entry_Title}}</a></h4>
-
-                <p>
+                <h4><a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)"><span class="glyphicon glyphicon-shopping-cart"></span></a>
+                    <a class="btn btn-warning btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a data-toggle="collapse" data-target="#{{item.Entry_ID}}" word-wrap: break-word>{{item.Entry_Title}}</a></h4>
+                <div id="{{item.Entry_ID}}" class="collapse">
+                    <p>
                     {{item.Data_Summary}}
-                    <br>
+                    </p>
                     <a class="btn btn-info btn-xs" ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">Details</a>
-                    <a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)">Add to basket</a>
-                    <a class="btn btn-info btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)">Remove from basket</a>
-                </p>
+                </div>
+
             </div>
             <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound" ng-model="ctrl.model.search.currentPage"
-                        max-size="ctrl.model.search.queryParameters.itemsPerPage" class="pagination-sm" boundary-links="true"></pagination>
+                        max-size="3" rotate=false class="pagination-sm" boundary-links="true"></pagination>
         </div>
     </div>
 
