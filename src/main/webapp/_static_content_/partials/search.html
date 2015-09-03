@@ -15,79 +15,81 @@
     </div>
 
     <div class="col-sm-3 col-sm-push-6 col-lg-2 col-lg-push-8">
-        <div class="nmdc-coverage">
-            <h4><nmdc-expansion expandable="ctrl.model.search.coverage.geographical"> Geographical coverage</nmdc-expansion></h4>
-            <div class="nmdc-expandable" ng-if="ctrl.model.search.coverage.geographical.expanded">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.selected"> Filter by
+        <div nmdc-add-class-when-at-top="nmdc-coverage-stick-to-top">
+            <div class="nmdc-coverage">
+                <h4><nmdc-expansion expandable="ctrl.model.search.coverage.geographical"> Geographical coverage</nmdc-expansion></h4>
+                <div class="nmdc-expandable" ng-if="ctrl.model.search.coverage.geographical.expanded">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.selected"> Filter by
                         <span ng-switch="ctrl.model.search.coverage.geographical.type">
                             <span ng-switch-when="rectangle">rectangle</span>
                             <span ng-switch-when="polygon">polygon</span>
                             <span ng-switch-default>map bounding box</span>
                         </span>
-                    </label>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="operation" class="col-lg-4 control-label">Operation</label>
-
-                        <div class="col-lg-8">
-                            <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation">
-                                <option value="IsWithin">Is within</option>
-                                <option value="Intersects">Intersects</option>
-                            </select>
-                        </div>
+                        </label>
                     </div>
-                </div>
-                <nmdc-map marker="ctrl.marker"></nmdc-map>
-            </div>
-        </div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="operation" class="col-lg-4 control-label">Operation</label>
 
-        <div class="nmdc-coverage">
-            <h4><nmdc-expansion expandable="ctrl.model.search.coverage.temporal"> Temporal coverage</nmdc-expansion></h4>
-            <div class="nmdc-expandable" ng-show="ctrl.model.search.coverage.temporal.expanded">
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.selected"> Filter by temporal coverage
-                    </label>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="operation" class="col-lg-4 control-label">Operation</label>
-
-                        <div class="col-lg-8">
-                            <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation">
-                                <option value="IsWithin">Is within</option>
-                                <option value="Intersects">Intersects</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="beginDate" class="col-lg-2 control-label">From</label>
-
-                        <div class="col-lg-10">
-                            <div class="input-group date-picker-right-container">
-                                <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
-                                       datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
+                            <div class="col-lg-8">
+                                <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation">
+                                    <option value="IsWithin">Is within</option>
+                                    <option value="Intersects">Intersects</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="endDate" class="col-lg-2 control-label">To</label>
+                    <nmdc-map marker="ctrl.marker"></nmdc-map>
+                </div>
+            </div>
 
-                        <div class="col-lg-10">
-                            <div class="input-group date-picker-right-container">
-                                <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
-                                       datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
+            <div class="nmdc-coverage">
+                <h4><nmdc-expansion expandable="ctrl.model.search.coverage.temporal"> Temporal coverage</nmdc-expansion></h4>
+                <div class="nmdc-expandable" ng-show="ctrl.model.search.coverage.temporal.expanded">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="ctrl.model.search.coverage.temporal.selected"> Filter by temporal coverage
+                        </label>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="operation" class="col-lg-4 control-label">Operation</label>
+
+                            <div class="col-lg-8">
+                                <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation">
+                                    <option value="IsWithin">Is within</option>
+                                    <option value="Intersects">Intersects</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label for="beginDate" class="col-lg-2 control-label">From</label>
+
+                            <div class="col-lg-10">
+                                <div class="input-group date-picker-right-container">
+                                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
+                                           datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate" class="col-lg-2 control-label">To</label>
+
+                            <div class="col-lg-10">
+                                <div class="input-group date-picker-right-container">
+                                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
+                                           datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,34 +100,39 @@
 
     <div class="col-sm-6 col-sm-pull-3 col-lg-8 col-lg-pull-2">
         <div ng-hide="ctrl.model.ready">Loading configuration...</div>
-        <form class="nmdc-search-form" ng-submit="ctrl.search()">
-            <div class="input-group">
-                <input class="form-control" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
-                <span class="nmdc-clear glyphicon glyphicon-remove-circle" ng-click="ctrl.clearSearchText()"></span>
+        <div nmdc-add-class-when-at-top="nmdc-search-stick-to-top">
+
+            <form class="nmdc-search-form" ng-submit="ctrl.search()">
+                <div class="input-group">
+                    <input class="form-control" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
+                    <span class="nmdc-clear glyphicon glyphicon-remove-circle" ng-click="ctrl.clearSearchText()"></span>
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="submit">Search</button>
                 </span>
-            </div>
-        </form>
-        <div>
-            <div class="nmdc-selected-facets">
-                Selected facets:
+                </div>
+            </form>
+            <div>
+                <div class="nmdc-selected-facets">
+                    Selected facets:
                 <span ng-repeat="facet in ctrl.model.facets">
                     <span ng-repeat="child in facet.children | filter:{selected: true}">
                         <a class="btn btn-default btn-xs" href="" ng-click="child.selected = false; ctrl.search()">{{child.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                     </span>
                 </span>
-                <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
-                <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.temporal.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.temporal.selected">Temporal coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                    <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                    <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.temporal.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.temporal.selected">Temporal coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                </div>
+                <div ng-hide="ctrl.model.hasSearched">
+                    To search for data sets, do any of the following:
+                    <ul>
+                        <li>Select one or more facets</li>
+                        <li>Type into the free text search box</li>
+                        <li>Specify geographical or temporal coverage</li>
+                    </ul>
+                </div>
             </div>
-            <div ng-hide="ctrl.model.hasSearched">
-                To search for data sets, do any of the following:
-                <ul>
-                    <li>Select one or more facets</li>
-                    <li>Type into the free text search box</li>
-                    <li>Specify geographical or temporal coverage</li>
-                </ul>
-            </div>
+        </div>
+        <div>
             <div ng-show="ctrl.isSearching" class="nmdc-searching">Searching...</div>
             <div nmdc-error="ctrl.model.search.error"></div>
             <div ng-show="ctrl.model.search.response.results">

@@ -118,7 +118,8 @@
                 facets: [],
                 hasSearched: false,
                 search: {
-                    queryParameters: {q: '', offset: 0}, response: {},
+                    queryParameters: {q: '', offset: 0},
+                    response: {},
                     itemsPerPage: 10,
                     currentPage: 1,
                     text: '',
@@ -466,6 +467,20 @@
                 '<span class="nmdc-expansion-icon" ng-show="expandable.expanded">−</span>' +
                 '<ng-transclude></ng-transclude>' +
                 '</a>'
+            };
+        }])
+        .directive('nmdcAddClassWhenAtTop', ['$window', function ($window) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attrs) {
+                    function onScroll() {
+                        var boundingClientRect = element.parent()[0].getBoundingClientRect().top;
+                        element.toggleClass(attrs.nmdcAddClassWhenAtTop, boundingClientRect < 0);
+                    }
+
+                    angular.element($window).on('scroll', onScroll);
+                    scope.$on('$destroy', function () { angular.element($window).off('scroll', onScroll); });
+                }
             };
         }])
         .controller('NmdcBasketController', ['$scope', 'NmdcModel', 'NmdcUtil', function ($scope, Model, Util) {

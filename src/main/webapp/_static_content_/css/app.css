@@ -117,10 +117,30 @@ a.nmdc-expansion span.nmdc-expansion-icon {
     margin: 5px;
 }
 
+@media (min-width: 768px) {
+    .nmdc-coverage-stick-to-top {
+        position: fixed;
+        top: 0;
+        margin-right: 15px;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+}
+
+@media (max-width: 767px) {
+    .nmdc-search-stick-to-top {
+        position: fixed;
+        top: 0;
+        margin-right: 15px;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+}
+
 .date-picker-right-container {
     position: relative;
 }
 .date-picker-right-container .dropdown-menu {
     left: auto !important;
     right: 0;
+    top: auto !important;
+    bottom: 40px;
 }
