@@ -418,14 +418,12 @@
                                 var polygon = L.polygon(parseCoordinates(marker.substring(9, marker.length - 2)));
                                 markerGroup.addLayer(polygon);
                                 if (!Model.search.coverage.geographical.selected) {
-                                    map.panTo(polygon.getBounds().getCenter());
                                     map.fitBounds(markerGroup.getBounds(), {maxZoom: Math.max(map.getZoom(), 4)});
                                 }
                             } else {
                                 var point = parseCoordinates(marker)[0];
                                 markerGroup.addLayer(L.marker(point));
                                 if (!Model.search.coverage.geographical.selected) map.setView(point, Math.max(map.getZoom(), 4), {animate: true});
-
                             }
                         }
                     }
