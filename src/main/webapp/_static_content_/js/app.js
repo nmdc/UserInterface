@@ -38,9 +38,6 @@
                 var str = date.toISOString();
                 return str.substring(0, str.length - 5) + 'Z';
             };
-            util.formatTitle = function (string) {
-              return encodeURIComponent(string).replace(/%2F/g, "%252F").replace(/%5C/g, "%255C");
-            };
             util.longTrafo = function (lat) {
                 if (Math.abs(lat) >= 180.0) {
                     if (lat > 0) {
@@ -107,6 +104,11 @@
                 });
             };
             return util;
+        }])
+        .filter('nmdcUriComponent', [function () {
+            return function (uriComponent) {
+                return encodeURIComponent(uriComponent).replace(/%2F/g, '%252F').replace(/%5C/g, '%255C');
+            };
         }])
         .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
 
