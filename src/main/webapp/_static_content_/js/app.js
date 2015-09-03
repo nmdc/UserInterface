@@ -38,9 +38,6 @@
                 var str = date.toISOString();
                 return str.substring(0, str.length - 5) + 'Z';
             };
-            util.formatTitle = function (string) {
-              return encodeURIComponent(string).replace(/%2F/g, "%252F").replace(/%5C/g, "%255C");
-            };
             util.longTrafo = function (lat) {
                 if (Math.abs(lat) >= 180.0) {
                     if (lat > 0) {
@@ -108,6 +105,11 @@
             };
             return util;
         }])
+        .filter('nmdcUriComponent', [function () {
+            return function (uriComponent) {
+                return encodeURIComponent(uriComponent).replace(/%2F/g, '%252F').replace(/%5C/g, '%255C');
+            };
+        }])
         .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
 
             var defaultExpanded = $window.innerWidth >= 768;
@@ -118,7 +120,8 @@
                 facets: [],
                 hasSearched: false,
                 search: {
-                    queryParameters: {q: '', offset: 0}, response: {},
+                    queryParameters: {q: '', offset: 0},
+                    response: {},
                     itemsPerPage: 10,
                     currentPage: 1,
                     text: '',
@@ -470,6 +473,20 @@
                 '<span class="nmdc-expansion-icon" ng-show="expandable.expanded">−</span>' +
                 '<ng-transclude></ng-transclude>' +
                 '</a>'
+            };
+        }])
+        .directive('nmdcAddClassWhenAtTop', ['$window', function ($window) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attrs) {
+                    function onScroll() {
+                        var boundingClientRect = element.parent()[0].getBoundingClientRect().top;
+                        element.toggleClass(attrs.nmdcAddClassWhenAtTop, boundingClientRect < 0);
+                    }
+
+                    angular.element($window).on('scroll', onScroll);
+                    scope.$on('$destroy', function () { angular.element($window).off('scroll', onScroll); });
+                }
             };
         }])
         .controller('NmdcBasketController', ['$scope', 'NmdcModel', 'NmdcUtil', function ($scope, Model, Util) {
