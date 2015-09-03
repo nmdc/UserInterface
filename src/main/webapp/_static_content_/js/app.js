@@ -118,7 +118,11 @@
                 facets: [],
                 hasSearched: false,
                 search: {
-                    queryParameters: {q: '', offset: 0}, response: {}, itemsPerPage: 10, currentPage: 1, text: '', coverage: {
+                    queryParameters: {q: '', offset: 0}, response: {},
+                    itemsPerPage: 10,
+                    currentPage: 1,
+                    text: '',
+                    coverage: {
                         geographical: {
                             expanded: defaultExpanded,
                             selected: false,

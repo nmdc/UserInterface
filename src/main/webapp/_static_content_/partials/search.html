@@ -144,7 +144,8 @@
                 </div>
                 <hr>
             </div>
-            <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound" ng-model="ctrl.model.search.currentPage"
+            <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound"
+                        ng-model="ctrl.model.search.currentPage" items-per-page="ctrl.model.search.itemsPerPage"
                         max-size="3" rotate=false class="pagination-sm" boundary-links="true"></pagination>
         </div>
     </div>
