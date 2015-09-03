@@ -1,4 +1,4 @@
-<div class="row" ng-controller="NmdcSearchController as ctrl" xmlns:word-wrap="http://www.w3.org/1999/xhtml">
+<div class="row" ng-controller="NmdcSearchController as ctrl">
 
     <div class="col-sm-3 col-lg-2">
         <div nmdc-error="ctrl.model.facets.error"></div>
@@ -135,10 +135,10 @@
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
                 <h4><a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)"><span class="glyphicon glyphicon-shopping-cart"></span></a>
                     <a class="btn btn-warning btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
-                    <a data-toggle="collapse" data-target="#{{item.Entry_ID}}" word-wrap: break-word>{{item.Entry_Title}}</a></h4>
+                    <span data-toggle="collapse" data-target="#{{item.Entry_ID}}" style="cursor: pointer;">{{item.Entry_Title}}</span></h4>
                 <div id="{{item.Entry_ID}}" class="collapse">
                     <p>
-                    {{item.Data_Summary}}
+                        {{item.Data_Summary}}
                     </p>
                     <a class="btn btn-info btn-xs" ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">Details</a>
                 </div>

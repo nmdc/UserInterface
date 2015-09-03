@@ -4,7 +4,7 @@
     <div class="nmdc-item" ng-repeat="(id, item) in ctrl.model.basket.idToItem">
         <h4><a class="btn btn-warning btn-xs" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
             <a class="btn btn-info btn-xs" ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">Details</a>
-            <a ng-href="#/details/{{ctrl.util.formatTitle(item.Entry_Title)}}">{{item.Entry_Title}}</a></h4>
+            {{item.Entry_Title}}</h4>
         <p>
             {{item.Data_Summary}}
             <br>
@@ -12,7 +12,6 @@
                 <a target="_blank" ng-href="{{url}}">{{url}}</a>
                 <br>
             </span>
-
         </p>
         <hr>
     </div>
