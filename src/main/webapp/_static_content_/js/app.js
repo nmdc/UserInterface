@@ -220,9 +220,13 @@
                         }
                     });
                     if (Model.search.text) {
-                        var words = Model.search.text.replace(/"/g, '').split(/ +/)
+                        var words = Model.search.text.match(/[^" ]\S*|".+?"/g)
                             .filter(function (word) { return word.length > 0; })
-                            .map(function (word) { return '*"' + word + '"*'; });
+                            .map(function (word) { if (word.indexOf("\"") > -1) {
+                                return word;
+                            } else {
+                                return '*' + word + '*';
+                            }});
                         var textTerm = words.join(' OR ');
                         if (words.length > 1) textTerm = '(' + textTerm + ')';
                         terms.push(textTerm);
