@@ -1,6 +1,6 @@
 <div class="row" ng-controller="NmdcSearchController as ctrl" xmlns:word-wrap="http://www.w3.org/1999/xhtml">
 
-    <div class="col-sm-2">
+    <div class="col-sm-3 col-lg-2">
         <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
             <h4><nmdc-expansion expandable="facet"> {{facet.name}} ({{facet.matches}})</nmdc-expansion></h4>
@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <div class="col-sm-2 col-sm-push-8">
+    <div class="col-sm-3 col-sm-push-6 col-lg-2 col-lg-push-8">
         <div class="nmdc-coverage">
             <h4><nmdc-expansion expandable="ctrl.model.search.coverage.geographical"> Geographical coverage</nmdc-expansion></h4>
             <div class="nmdc-expandable" ng-if="ctrl.model.search.coverage.geographical.expanded">
@@ -96,7 +96,7 @@
         </div>
     </div>
 
-    <div class="col-sm-8 col-sm-pull-2">
+    <div class="col-sm-6 col-sm-pull-3 col-lg-8 col-lg-pull-2">
         <div ng-hide="ctrl.model.ready">Loading configuration...</div>
         <form class="nmdc-search-form" ng-submit="ctrl.search()">
             <div class="input-group">
