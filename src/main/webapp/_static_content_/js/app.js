@@ -375,7 +375,7 @@
                                 $timeout(function () {
                                     itemGroup.clearLayers();
                                     addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
-                                });
+                                }, 0, false);
                             } else {
                                 setCoordinates(layer.getLatLngs());
                             }
@@ -412,9 +412,13 @@
                         markerGroup.clearLayers();
                         if (marker) {
                             if (marker.indexOf('POLYGON((') === 0) {
-                                markerGroup.addLayer(L.polygon(parseCoordinates(marker.substring(9, marker.length - 2))));
+                                var polygon = L.polygon(parseCoordinates(marker.substring(9, marker.length - 2)));
+                                markerGroup.addLayer(polygon);
+                                if (!Model.search.coverage.geographical.selected) map.panTo(polygon.getBounds().getCenter());
                             } else {
-                                markerGroup.addLayer(L.marker(parseCoordinates(marker)[0]));
+                                var point = parseCoordinates(marker)[0];
+                                markerGroup.addLayer(L.marker(point));
+                                if (!Model.search.coverage.geographical.selected) map.panTo(point);
                             }
                         }
                     }
@@ -430,7 +434,7 @@
                     init();
 
                     scope.$watch('marker', function () {
-                        updateMarker(scope.marker);
+                        $timeout(function () { updateMarker(scope.marker); }, 0, false);
                     });
                     scope.$on('$destroy', function () {
                         map.remove();
