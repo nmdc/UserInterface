@@ -322,7 +322,7 @@
                     var itemGroup = L.featureGroup().addTo(map);
                     var markerGroup = L.featureGroup().addTo(map);
 
-                    var drawerOptions = {shapeOptions: {color: '#03f'}, allowIntersection: false};
+                    var drawerOptions = {shapeOptions: {color: '#333333'}, allowIntersection: false};
                     var rectangleDrawer = new L.Draw.Rectangle(map, drawerOptions);
                     var polygonDrawer = new L.Draw.Polygon(map, drawerOptions);
 
