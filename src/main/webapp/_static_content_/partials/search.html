@@ -142,8 +142,8 @@
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
                 <h4><a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)"><span class="glyphicon glyphicon-shopping-cart"></span></a>
                     <a class="btn btn-warning btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
-                    <span data-toggle="collapse" data-target="#{{ctrl.util.removeDot(item.Entry_ID)}}" style="cursor: pointer;">{{item.Entry_Title}}</span></h4>
-                <div id="{{ctrl.util.removeDot(item.Entry_ID)}}" class="collapse">
+                    <span data-toggle="collapse" data-target="#{{ctrl.util.removeDotAndSpace(item.Entry_ID)}}" style="cursor: pointer;">{{item.Entry_Title}}</span></h4>
+                <div id="{{ctrl.util.removeDotAndSpace(item.Entry_ID)}}" class="collapse">
                     <p>
                         {{item.Data_Summary}}
                     </p>

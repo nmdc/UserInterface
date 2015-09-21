@@ -29,8 +29,8 @@
                 return string;
             };
 
-            util.removeDot = function (string) {
-              return string.replace('.', '');
+            util.removeDotAndSpace = function (string) {
+              return string.replace('.', '').replace(' ', '');
             };
 
             util.twoDigits = function (x) {
