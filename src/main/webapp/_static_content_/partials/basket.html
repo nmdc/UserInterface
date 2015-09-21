@@ -3,7 +3,7 @@
     <p ng-show="ctrl.model.basket.count == 0">Basket is empty</p>
     <div class="nmdc-item" ng-repeat="(id, item) in ctrl.model.basket.idToItem">
         <h4><a class="btn btn-warning btn-xs" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
-            <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_Title | nmdcUriComponent}}">Details</a>
+            <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID | nmdcUriComponent}}">Details</a>
             {{item.Entry_Title}}</h4>
         <p>
             {{item.Data_Summary}}

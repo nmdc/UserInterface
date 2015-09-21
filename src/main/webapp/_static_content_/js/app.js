@@ -268,6 +268,7 @@
                 if (angular.equals(Model.search.queryParameters, queryParameters)) return;
                 Model.search.queryParameters = queryParameters;
                 $log.log(queryParameters);
+                $log.log(Util.urlParametersToString(queryParameters));
 
                 cancelSearch();
                 Model.hasSearched = true;
@@ -508,7 +509,7 @@
             ctrl.model = Model;
             ctrl.id = $routeParams.id;
 
-            $http.get(apiPath + 'search?q="' + ctrl.id + '"')
+            $http.get(apiPath + 'getMetadataDetails?doi=' + ctrl.id)
                 .success(function (data) {
                     Util.adaptSearchResults(data.results);
                     ctrl.details = data.results[0];
