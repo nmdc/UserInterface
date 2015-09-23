@@ -4,12 +4,13 @@
         <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
             <h4><nmdc-expansion expandable="facet"> {{facet.name}} ({{facet.matches}})</nmdc-expansion></h4>
-            <div class="nmdc-expandable" ng-show="facet.expanded">
-                <div class="checkbox" ng-repeat="child in facet.children">
-                    <label>
-                        <input type="checkbox" ng-model="child.selected" ng-change="ctrl.search()"> {{child.value}} ({{child.matches}})
-                    </label>
-                </div>
+            <div class="nmdc-expandable nmdc-facet-tree" ng-show="facet.expanded">
+                <treecontrol class="tree-classic" tree-model="facet.children" options="ctrl.facetTree.options"
+                             expanded-nodes="facet.expandedNodes"
+                             selected-nodes="facet.selectedNodes"
+                             on-selection="ctrl.search()">
+                    <span class="nmdc-facet-tree-label">{{node.value}} ({{node.matches}})</span>
+                </treecontrol>
             </div>
         </div>
     </div>
@@ -115,8 +116,8 @@
                 <div class="nmdc-selected-facets">
                     Selected facets:
                 <span ng-repeat="facet in ctrl.model.facets">
-                    <span ng-repeat="child in facet.children | filter:{selected: true}">
-                        <a class="btn btn-default btn-xs" href="" ng-click="child.selected = false; ctrl.search()">{{child.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                    <span ng-repeat="node in facet.selectedNodes">
+                        <a class="btn btn-default btn-xs" href="" ng-click="facet.selectedNodes.splice($index, 1); ctrl.search()">{{node.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                     </span>
                 </span>
                     <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>

@@ -3,6 +3,14 @@
     word-wrap: break-word;
 }
 
+.nmdc-facet-tree {
+    margin-left: -20px;
+}
+
+.nmdc-facet-tree-label {
+    font-weight: normal;
+}
+
 .nmdc-item {
     margin: 25px 0;
 }

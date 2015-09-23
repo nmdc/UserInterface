@@ -4,7 +4,7 @@
 
     var apiPath = 'metadata-api/';
 
-    angular.module('NmdcApp', ['ngAnimate', 'ngRoute', 'ui.bootstrap'])
+    angular.module('NmdcApp', ['ngAnimate', 'ngRoute', 'ui.bootstrap', 'treeControl'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider
                 .when('/', {templateUrl: '_static_content_/partials/search.html'})
@@ -147,19 +147,22 @@
                 map: {options: {center: L.latLng(60, 0), zoom: 3}}
             };
 
-            function expandFacets(facets, level) {
-                if (facets && level > 0) {
-                    facets.forEach(function (facet) {
-                        facet.expanded = true;
-                        expandFacets(facet.children, level - 1);
-                    });
-                }
+            function initFacetTree(facet, parent, children, level) {
+                children.forEach(function (child) {
+                    child.parent = parent;
+                    if (level < model.options.facetExpansionLevel) facet.expandedNodes.push(child);
+                    if (child.childFacets) initFacetTree(facet, child, child.childFacets, level + 1);
+                });
             }
 
             function init() {
                 model.ready = true;
-                expandFacets(model.facets, model.options.facetExpansionLevel);
-                model.facets.forEach(function (facet) { facet.expanded = defaultExpanded; });
+                model.facets.forEach(function (facet) {
+                    facet.expanded = defaultExpanded;
+                    facet.expandedNodes = [];
+                    facet.selectedNodes = [];
+                    initFacetTree(facet, null, facet.children, 0);
+                });
             }
 
             $http.get(apiPath + 'getFacets')
@@ -199,6 +202,14 @@
             ctrl.model = Model;
             ctrl.util = Util;
 
+            ctrl.facetTree = {
+                options: {
+                    nodeChildren: 'childFacets',
+                    multiSelection: true,
+                    dirSelectable: true
+                }
+            };
+
             ctrl.isSearching = false;
             var cancelSearch = function () {};
 
@@ -211,8 +222,19 @@
                     var terms = [];
                     Model.facets.forEach(function (facet) {
                         var facetTerms = [];
-                        facet.children.forEach(function (child) {
-                            if (child.selected) facetTerms.push(facet.name + ':"' + child.value + '"');
+
+                        function addFacetTerms(path, node) {
+                            if (path.length > 0) path += '>';
+                            path += node.value;
+                            if (facet.selectedNodes.indexOf(node) >= 0) {
+                                facetTerms.push(facet.name + ':"' + path + '"');
+                            } else {
+                                node.childFacets.forEach(function (child) { addFacetTerms(path, child); });
+                            }
+                        }
+
+                        facet.children.forEach(function (node) {
+                            addFacetTerms('', node);
                         });
                         if (facetTerms.length > 0) {
                             var facetQuery = facetTerms.join(' OR ');
