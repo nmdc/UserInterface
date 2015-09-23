@@ -29,10 +29,6 @@
                 return string;
             };
 
-            util.removeDotAndSpace = function (string) {
-              return string.replace('.', '').replace(' ', '');
-            };
-
             util.twoDigits = function (x) {
                 return x < 10 ? '0' + x : x;
             };
