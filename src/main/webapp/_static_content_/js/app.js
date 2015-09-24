@@ -150,6 +150,7 @@
             function initFacetTree(facet, parent, children, level) {
                 children.forEach(function (child) {
                     child.parent = parent;
+                    facet.allNodes.push(child);
                     if (level < model.options.facetExpansionLevel) facet.expandedNodes.push(child);
                     if (child.childFacets) initFacetTree(facet, child, child.childFacets, level + 1);
                 });
@@ -161,6 +162,7 @@
                     facet.expanded = defaultExpanded;
                     facet.expandedNodes = [];
                     facet.selectedNodes = [];
+                    facet.allNodes = [];
                     initFacetTree(facet, null, facet.children, 0);
                 });
             }
@@ -201,6 +203,14 @@
             $scope.ctrl = ctrl;
             ctrl.model = Model;
             ctrl.util = Util;
+
+            ctrl.typeahead = {
+                text: {},
+                onSelect: function (facet, node) {
+                    ctrl.typeahead.text[facet.name] = '';
+                    if (facet.selectedNodes.indexOf(node) < 0) facet.selectedNodes.push(node);
+                }
+            };
 
             ctrl.facetTree = {
                 options: {

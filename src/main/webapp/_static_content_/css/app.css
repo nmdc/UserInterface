@@ -1,9 +1,17 @@
 .nmdc-facet {
+    margin-top: 10px;
     margin-bottom: 25px;
     word-wrap: break-word;
 }
 
+.nmdc-facet .input-group-addon {
+    background-color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .nmdc-facet-tree {
+    margin-top: 5px;
     margin-left: -20px;
 }
 

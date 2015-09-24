@@ -3,7 +3,15 @@
     <div class="col-sm-3 col-lg-2">
         <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
-            <h4><nmdc-expansion expandable="facet"> {{facet.name}} ({{facet.matches}})</nmdc-expansion></h4>
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <nmdc-expansion expandable="facet"></nmdc-expansion>
+                </span>
+                <input class="form-control" type="text" placeholder="{{facet.name}} ({{facet.matches}})"
+                       ng-model="ctrl.typeahead.text[facet.name]" typeahead="node.value for node in facet.allNodes | filter:{value:$viewValue}"
+                       ng-blur="ctrl.typeahead.text[facet.name] = ''"
+                       typeahead-on-select="ctrl.typeahead.onSelect(facet, $item)">
+            </div>
             <div class="nmdc-expandable nmdc-facet-tree" ng-show="facet.expanded">
                 <treecontrol class="tree-classic" tree-model="facet.children" options="ctrl.facetTree.options"
                              expanded-nodes="facet.expandedNodes"
