@@ -208,7 +208,10 @@
                 text: {},
                 onSelect: function (facet, node) {
                     ctrl.typeahead.text[facet.name] = '';
-                    if (facet.selectedNodes.indexOf(node) < 0) facet.selectedNodes.push(node);
+                    if (facet.selectedNodes.indexOf(node) < 0) {
+                        facet.selectedNodes.push(node);
+                        ctrl.search();
+                    }
                 }
             };
 
