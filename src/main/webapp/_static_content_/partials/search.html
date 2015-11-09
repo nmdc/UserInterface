@@ -12,7 +12,7 @@
                        ng-blur="ctrl.typeahead.text[facet.name] = ''"
                        typeahead-on-select="ctrl.typeahead.onSelect(facet, $item)">
                 <span class="glyphicon form-control-feedback" ng-click="ctrl.typeahead.text[facet.name] = ''"
-                      data-ng-class="ctrl.typeahead.text[facet.name] ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
+                      ng-class="ctrl.typeahead.text[facet.name] ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
             </div>
             <div class="nmdc-expandable nmdc-facet-tree" ng-show="facet.expanded">
                 <treecontrol class="tree-classic" tree-model="facet.children" options="ctrl.facetTree.options"
@@ -116,7 +116,7 @@
                 <div class="form-group has-feedback">
                     <input class="form-control" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
                     <span class="glyphicon form-control-feedback" ng-click="ctrl.model.search.text = ''; ctrl.search()"
-                          data-ng-class="ctrl.model.search.text ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
+                          ng-class="ctrl.model.search.text ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
                 </div>
             </form>
             <div ng-hide="ctrl.model.ready">Loading configuration...</div>
@@ -151,7 +151,7 @@
             <div class="nmdc-item" ng-repeat="item in ctrl.model.search.response.results" ng-mouseenter="ctrl.addMarker(item)" ng-mouseleave="ctrl.removeMarker()">
                 <h4><a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.add(item)"><span class="glyphicon glyphicon-shopping-cart"></span></a>
                     <a class="btn btn-warning btn-xs" ng-show="ctrl.model.basket.idToItem[item.Entry_ID]" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
-                    <span data-toggle="collapse" data-target="#itemNumber{{$index}}" style="cursor: pointer;">{{item.Entry_Title}}</span></h4>
+                    <span toggle="collapse" target="#itemNumber{{$index}}" style="cursor: pointer;">{{item.Entry_Title}}</span></h4>
                 <div id="itemNumber{{$index}}" class="collapse">
                     <p>
                         {{item.Data_Summary}}
@@ -161,9 +161,9 @@
                 <hr>
             </div>
             <uib-pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound"
-                        ng-model="ctrl.model.search.currentPage" items-per-page="ctrl.model.search.itemsPerPage"
-                        max-size="3" rotate=false class="pagination-sm" boundary-links="true"
-                        first-text=&#124&lt previous-text=&lt next-text=&gt last-text=&gt&#124>
+                            ng-model="ctrl.model.search.currentPage" items-per-page="ctrl.model.search.itemsPerPage"
+                            max-size="3" rotate=false class="pagination-sm" boundary-links="true"
+                            first-text=&#124&lt previous-text=&lt next-text=&gt last-text=&gt&#124>
             </uib-pagination>
         </div>
     </div>
