@@ -18,7 +18,7 @@
             uibDatepickerConfig.minMode = 'month';
             uibDatepickerPopupConfig.closeText = 'Close';
         }])
-        .factory('NmdcUtil', [function () {
+        .factory('NmdcUtil', ['$window', '$timeout', function ($window, $timeout) {
             var util = {};
             util.urlParametersToString = function (values) {
                 var string = '';
@@ -97,6 +97,20 @@
                     result.Data_URL = util.stringToArrayIfPossible(result.Data_URL);
                 });
             };
+
+            util.hasMouse = $window.innerWidth >= 768;
+            angular.element($window).on('mousemove touchmove touchstart', function setHasMouse(e) {
+                e = e.originalEvent;
+                var hasMouse = false;
+                if (e.type === 'mousemove') {
+                    if (e.movementX === 0 && e.movementY === 0) return;
+                    hasMouse = true;
+                }
+                if (util.hasMouse !== hasMouse) {
+                    $timeout(function () { util.hasMouse = hasMouse; });
+                }
+            });
+
             return util;
         }])
         .filter('nmdcUriComponent', [function () {
@@ -370,7 +384,7 @@
                     var DrawControl = L.Control.extend({
                         options: {position: 'topleft'},
                         onAdd: function (map) {
-                            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-draw-section leaflet-draw-toolbar');
+                            var container = L.DomUtil.create('div', 'nmdc-map-button-container leaflet-bar leaflet-control leaflet-draw-section leaflet-draw-toolbar');
 
                             var boundingBox = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
                             boundingBox.title = 'Use map bounding box';
@@ -472,9 +486,14 @@
                     }
 
                     init();
+                    scope.util = Util;
 
                     scope.$watch('marker', function () {
                         $timeout(function () { updateMarker(scope.marker); }, 0, false);
+                    });
+                    scope.$watch('util.hasMouse', function () {
+                        element.find('.nmdc-map-button-container').toggle(Util.hasMouse);
+                        if (!Util.hasMouse) setType('mapBoundingBox', null);
                     });
                     scope.$on('$destroy', function () {
                         map.remove();
