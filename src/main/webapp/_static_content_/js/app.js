@@ -12,11 +12,11 @@
                 .when('/details/:id', {templateUrl: '_static_content_/partials/details.html'})
                 .otherwise({redirectTo: '/'});
         }])
-        .config(['datepickerConfig', 'datepickerPopupConfig', function (datepickerConfig, datepickerPopupConfig) {
-            datepickerConfig.startingDay = 1;
-            datepickerConfig.showWeeks = true;
-            datepickerConfig.minMode = 'month';
-            datepickerPopupConfig.closeText = 'Close';
+        .config(['uibDatepickerConfig', 'uibDatepickerPopupConfig', function (uibDatepickerConfig, uibDatepickerPopupConfig) {
+            uibDatepickerConfig.startingDay = 1;
+            uibDatepickerConfig.showWeeks = true;
+            uibDatepickerConfig.minMode = 'month';
+            uibDatepickerPopupConfig.closeText = 'Close';
         }])
         .factory('NmdcUtil', [function () {
             var util = {};
@@ -493,11 +493,11 @@
                 restrict: 'A',
                 scope: {nmdcError: '='},
                 template:
-                '<alert ng-show="nmdcError" type="danger">' +
+                '<uib-alert ng-show="nmdcError" type="danger">' +
                 '<h4>{{nmdcError.header}}</h4>' +
                 '<div><strong>Status:</strong> {{nmdcError.status}}</div>' +
                 '<div><strong>Message:</strong> {{nmdcError.response.message}}</div>' +
-                '</alert>'
+                '</uib-alert>'
             };
         }])
         .directive('nmdcExpansion', [function () {

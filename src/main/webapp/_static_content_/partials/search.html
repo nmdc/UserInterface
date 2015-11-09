@@ -8,7 +8,7 @@
                     <nmdc-expansion expandable="facet"></nmdc-expansion>
                 </span>
                 <input class="form-control" type="text" placeholder="{{facet.name}} ({{facet.matches}})"
-                       ng-model="ctrl.typeahead.text[facet.name]" typeahead="node.value for node in facet.allNodes | filter:{value:$viewValue}"
+                       ng-model="ctrl.typeahead.text[facet.name]" uib-typeahead="node.value for node in facet.allNodes | filter:{value:$viewValue}"
                        ng-blur="ctrl.typeahead.text[facet.name] = ''"
                        typeahead-on-select="ctrl.typeahead.onSelect(facet, $item)">
                 <span class="glyphicon form-control-feedback" ng-click="ctrl.typeahead.text[facet.name] = ''"
@@ -83,7 +83,7 @@
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
                                     <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
-                                           datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
+                                           uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
@@ -96,7 +96,7 @@
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
                                     <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
-                                           datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
+                                           uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
                                 </span>
@@ -160,11 +160,11 @@
                 </div>
                 <hr>
             </div>
-            <pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound"
+            <uib-pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound"
                         ng-model="ctrl.model.search.currentPage" items-per-page="ctrl.model.search.itemsPerPage"
                         max-size="3" rotate=false class="pagination-sm" boundary-links="true"
                         first-text=&#124&lt previous-text=&lt next-text=&gt last-text=&gt&#124>
-            </pagination>
+            </uib-pagination>
         </div>
     </div>
 
