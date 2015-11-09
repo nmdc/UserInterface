@@ -365,13 +365,12 @@
         }])
         .directive('nmdcMap', ['$timeout', 'NmdcModel', 'NmdcUtil', function ($timeout, Model, Util) {
             return {
-                restrict: 'E',
+                restrict: 'A',
                 scope: {
                     marker: '='
                 },
-                template: '<div id="nmdc-map"></div>',
                 link: function (scope, element, attrs) {
-                    var map = L.map('nmdc-map', Model.map.options);
+                    var map = L.map(element[0], Model.map.options);
                     map.addLayer(L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap contributors'}));
 
                     var itemGroup = L.featureGroup().addTo(map);
