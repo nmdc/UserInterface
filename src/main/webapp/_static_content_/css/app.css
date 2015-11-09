@@ -31,6 +31,11 @@
     margin-bottom: 0;
 }
 
+.nmdc-search-icon {
+    cursor: pointer;
+    pointer-events: auto;
+}
+
 .nmdc-search-form {
     margin: 10px 0;
 }
@@ -45,8 +50,8 @@
 }
 
 .nmdc-deselect-facet {
-    color: #cc0000;
-    margin-left: 3px;
+    color: #333333;
+    margin-left: 4px;
 }
 
 .nmdc-pagination {
@@ -76,19 +81,6 @@
 
 .nmdc-coverage {
     margin-bottom: 25px;
-}
-
-.nmdc-clear {
-    position: absolute;
-    right: 77px;
-    top: 0;
-    bottom: 0;
-    height: 14px;
-    margin: auto;
-    font-size: 14px;
-    cursor: pointer;
-    color: #ccc;
-    z-index: 2;
 }
 
 a.nmdc-expansion {

@@ -3,7 +3,7 @@
     <div class="col-sm-3">
         <div nmdc-error="ctrl.model.facets.error"></div>
         <div class="nmdc-facet" ng-repeat="facet in ctrl.model.facets">
-            <div class="input-group">
+            <div class="input-group has-feedback">
                 <span class="input-group-addon">
                     <nmdc-expansion expandable="facet"></nmdc-expansion>
                 </span>
@@ -11,6 +11,8 @@
                        ng-model="ctrl.typeahead.text[facet.name]" typeahead="node.value for node in facet.allNodes | filter:{value:$viewValue}"
                        ng-blur="ctrl.typeahead.text[facet.name] = ''"
                        typeahead-on-select="ctrl.typeahead.onSelect(facet, $item)">
+                <span class="glyphicon form-control-feedback" ng-click="ctrl.typeahead.text[facet.name] = ''"
+                      data-ng-class="ctrl.typeahead.text[facet.name] ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
             </div>
             <div class="nmdc-expandable nmdc-facet-tree" ng-show="facet.expanded">
                 <treecontrol class="tree-classic" tree-model="facet.children" options="ctrl.facetTree.options"
@@ -112,12 +114,10 @@
         <div nmdc-add-class-when-at-top="nmdc-search-stick-to-top">
 
             <form class="nmdc-search-form" ng-submit="ctrl.search()">
-                <div class="input-group">
+                <div class="form-group has-feedback">
                     <input class="form-control" type="text" ng-blur="ctrl.search()" ng-model="ctrl.model.search.text">
-                    <span class="nmdc-clear glyphicon glyphicon-remove-circle" ng-click="ctrl.clearSearchText()"></span>
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </span>
+                    <span class="glyphicon form-control-feedback" ng-click="ctrl.model.search.text = ''; ctrl.search()"
+                          data-ng-class="ctrl.model.search.text ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
                 </div>
             </form>
             <div>
