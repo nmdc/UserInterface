@@ -110,7 +110,6 @@
     </div>
 
     <div class="col-sm-6 col-sm-pull-3">
-        <div ng-hide="ctrl.model.ready">Loading configuration...</div>
         <div nmdc-add-class-when-at-top="nmdc-search-stick-to-top">
 
             <form class="nmdc-search-form" ng-submit="ctrl.search()">
@@ -120,7 +119,8 @@
                           data-ng-class="ctrl.model.search.text ? 'glyphicon-remove-circle nmdc-search-icon' : 'glyphicon-search'"></span>
                 </div>
             </form>
-            <div>
+            <div ng-hide="ctrl.model.ready">Loading configuration...</div>
+            <div ng-show="ctrl.model.ready">
                 <div class="nmdc-selected-facets">
                     Selected facets:
                 <span ng-repeat="facet in ctrl.model.facets">
