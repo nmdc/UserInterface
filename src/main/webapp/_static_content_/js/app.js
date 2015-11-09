@@ -39,18 +39,11 @@
                 var str = date.toISOString();
                 return str.substring(0, str.length - 5) + 'Z';
             };
-            util.longTrafo = function (lat) {
-                if (Math.abs(lat) >= 180.0) {
-                    if (lat > 0) {
-                        return -180.0 + lat % 180.0;
-                    }
-                    else {
-                        return 180.0 + lat % 180.0;
-                    }
-                }
-                else {
-                    return lat;
-                }
+            util.normalizeLongitude = function (longitude) {
+                longitude = longitude % 360;
+                if (longitude < -180) return longitude + 360;
+                if (longitude >= 180) return longitude - 360;
+                return longitude;
             };
             util.clip = function(x, min, max) {
                 return Math.max(Math.min(x, max), min);
@@ -269,9 +262,9 @@
                     }
                     if (Model.search.coverage.geographical.selected && Model.search.coverage.geographical.coordinates.length > 0) {
                         var coordinates = [];
-                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(ctrl.util.longTrafo(point.lng) + ' ' + ctrl.util.clip(point.lat, -90.0, 90.0));});
+                        Model.search.coverage.geographical.coordinates.forEach(function (point) { coordinates.push(Util.normalizeLongitude(point.lng) + ' ' + Util.clip(point.lat, -90.0, 90.0));});
                         var first = Model.search.coverage.geographical.coordinates[0];
-                        coordinates.push(ctrl.util.longTrafo(first.lng) + ' ' + ctrl.util.clip(first.lat, -90.0, 90.0));
+                        coordinates.push(Util.normalizeLongitude(first.lng) + ' ' + Util.clip(first.lat, -90.0, 90.0));
                         terms.push('location_rpt:"' + Model.search.coverage.geographical.operation + '(POLYGON((' + coordinates.join(',') + ')))"');
                     }
                     return terms.join(' AND ');
