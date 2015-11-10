@@ -175,12 +175,11 @@
             }
 
             $http.get(apiPath + 'getFacets')
-                .success(function (data) {
-                    angular.extend(model, data);
+                .then(function (response) {
+                    angular.extend(model, response.data);
                     init();
-                })
-                .error(function (data, status) {
-                    model.facets.error = {header: 'Error getting facets', status: status, response: data};
+                }, function (response) {
+                    model.facets.error = {title: 'Error getting facets', response: response};
                 });
 
             model.basket.clear = function () {
@@ -314,21 +313,22 @@
                     canceller.resolve('cancelled');
                 };
 
-                function setResponse(response) {
+                function setResponseData(data) {
                     ctrl.isSearching = false;
                     ctrl.removeMarker();
-                    Util.adaptSearchResults(response.results);
-                    Model.search.response = response;
+                    Util.adaptSearchResults(data.results);
+                    Model.search.response = data;
                     delete Model.search.error;
                     if (!isPageSearch) Model.search.currentPage = 1;
                 }
 
                 $http.get(apiPath + 'search?' + Util.urlParametersToString(queryParameters), {timeout: canceller.promise})
-                    .success(setResponse)
-                    .error(function (data, status) {
+                    .then(function (response) {
+                        setResponseData(response.data);
+                    }, function (response) {
                         if (isCancelled) return;
-                        setResponse({results: []});
-                        Model.search.error = {header: 'Error getting search results', status: status, response: data};
+                        setResponseData({results: []});
+                        Model.search.error = {title: 'Error getting search results', response: response};
                     });
             };
 
@@ -507,9 +507,9 @@
                 scope: {nmdcError: '='},
                 template:
                 '<uib-alert ng-show="nmdcError" type="danger">' +
-                '<h4>{{nmdcError.header}}</h4>' +
-                '<div><strong>Status:</strong> {{nmdcError.status}}</div>' +
-                '<div><strong>Message:</strong> {{nmdcError.response.message}}</div>' +
+                '<h4>{{nmdcError.title}}</h4>' +
+                '<div><strong>Status:</strong> {{nmdcError.response.status}}</div>' +
+                '<div><strong>Message:</strong> {{nmdcError.response.data.message}}</div>' +
                 '</uib-alert>'
             };
         }])
@@ -554,12 +554,12 @@
             ctrl.id = $routeParams.id;
 
             $http.get(apiPath + 'getMetadataDetails?doi=' + ctrl.id)
-                .success(function (data) {
+                .then(function (response) {
+                    var data = response.data;
                     Util.adaptSearchResults(data.results);
                     ctrl.details = data.results[0];
-                })
-                .error(function (data, status) {
-                    ctrl.error = {header: 'Error getting metadata details', status: status, response: data};
+                }, function (response) {
+                    ctrl.error = {title: 'Error getting metadata details', response: response};
                 });
         }]);
 }());
