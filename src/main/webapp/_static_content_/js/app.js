@@ -473,11 +473,7 @@
                     function wrapInScopeApply(f) {
                         return function () {
                             var a = arguments;
-                            if (scope.$$phase) {
-                                f(a);
-                            } else {
-                                scope.$apply(function () { f.apply(this, a); });
-                            }
+                            $timeout(function () { f.apply(this, a); });
                         };
                     }
 
