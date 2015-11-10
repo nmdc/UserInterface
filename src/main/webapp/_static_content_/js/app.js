@@ -327,7 +327,7 @@
                     .success(setResponse)
                     .error(function (data, status) {
                         if (isCancelled) return;
-                        setResponse({});
+                        setResponse({results: []});
                         Model.search.error = {header: 'Error getting search results', status: status, response: data};
                     });
             };
