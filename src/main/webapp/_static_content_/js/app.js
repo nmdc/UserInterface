@@ -97,6 +97,20 @@
                     result.Data_URL = util.stringToArrayIfPossible(result.Data_URL);
                 });
             };
+            util.splitSearchText = function (text) {
+                var result = [];
+                var parts = text.split('"');
+                for (var i = 0; i < parts.length; i++) {
+                    var part = parts[i];
+                    if (i % 2 === 1) {
+                        result.push('"' + part + '"');
+                    } else {
+                        var words = part.split(/\s+/);
+                        words.forEach(function (word) { if (word.length > 0) result.push('*' + word + '*'); });
+                    }
+                }
+                return result;
+            };
 
             util.hasMouse = $window.innerWidth >= 768;
             angular.element($window).on('mousemove touchmove touchstart', function setHasMouse(e) {
@@ -262,9 +276,7 @@
                         }
                     });
                     if (Model.search.text) {
-                        var words = Model.search.text.match(/[^" ]\S*|".+?"/g)
-                            .filter(function (word) { return word.length > 0; })
-                            .map(function (word) { return word.indexOf('"') > -1 ? word : '*' + word + '*'; });
+                        var words = Util.splitSearchText(Model.search.text);
                         var textTerm = words.join(' OR ');
                         if (words.length > 1) textTerm = '(' + textTerm + ')';
                         terms.push(textTerm);
