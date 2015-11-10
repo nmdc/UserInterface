@@ -473,7 +473,11 @@
                     function wrapInScopeApply(f) {
                         return function () {
                             var a = arguments;
-                            scope.$apply(function () { f.apply(this, a); });
+                            if (scope.$$phase) {
+                                f(a);
+                            } else {
+                                scope.$apply(function () { f.apply(this, a); });
+                            }
                         };
                     }
 
