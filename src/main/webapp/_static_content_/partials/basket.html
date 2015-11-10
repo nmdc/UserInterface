@@ -9,7 +9,7 @@
             {{item.Data_Summary}}
             <br>
             <span ng-repeat="url in item.Data_URL">
-                <a target="_blank" ng-href="{{url}}">{{url}}</a>
+                <a target="_blank" ng-href="{{url | nmdcUriDecode}}">{{url | nmdcUriDecode}}</a>
                 <br>
             </span>
         </p>
