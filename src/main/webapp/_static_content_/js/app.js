@@ -404,7 +404,9 @@
                     map.addControl(new DrawControl());
 
                     map.on('moveend', function () {
-                        map.panTo(map.getCenter().wrap(), {animate: false});
+                        if (Math.abs(map.getCenter().lng - map.getCenter().wrap().lng) > 1) {
+                            map.panTo(map.getCenter().wrap(), {animate: false});
+                        }
                         Model.map.options.center = map.getCenter();
                         Model.map.options.zoom = map.getZoom();
                         if (Model.search.coverage.geographical.type === 'mapBoundingBox') {
