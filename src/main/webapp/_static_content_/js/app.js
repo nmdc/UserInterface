@@ -97,16 +97,20 @@
                     result.Data_URL = util.stringToArrayIfPossible(result.Data_URL);
                 });
             };
+            util.solrEscapeSpecialCharacters = function (text) {
+                // https://lucene.apache.org/core/5_3_1/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#Escaping_Special_Characters
+                return text.replace(/[\+\-&\|!\(\)\{}\[\]\^"~\*\?:\\\/]/g, '\\$&');
+            };
             util.splitSearchText = function (text) {
                 var result = [];
                 var parts = text.split('"');
                 for (var i = 0; i < parts.length; i++) {
                     var part = parts[i];
                     if (i % 2 === 1) {
-                        result.push('"' + part + '"');
+                        result.push('"' + util.solrEscapeSpecialCharacters(part) + '"');
                     } else {
                         var words = part.split(/\s+/);
-                        words.forEach(function (word) { if (word.length > 0) result.push('*' + word + '*'); });
+                        words.forEach(function (word) { if (word.length > 0) result.push('*' + util.solrEscapeSpecialCharacters(word) + '*'); });
                     }
                 }
                 return result;
