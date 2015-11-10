@@ -508,8 +508,12 @@
                 template:
                 '<uib-alert ng-show="nmdcError" type="danger">' +
                 '<h4>{{nmdcError.title}}</h4>' +
-                '<div><strong>Status:</strong> {{nmdcError.response.status}}</div>' +
-                '<div><strong>Message:</strong> {{nmdcError.response.data.message}}</div>' +
+                '<div ng-show="nmdcError.response.status > 0">' +
+                '<div ng-show="nmdcError.response.statusText">{{nmdcError.response.status}} - {{nmdcError.response.statusText}}</div>' +
+                '<div ng-hide="nmdcError.response.statusText">Status code: {{nmdcError.response.status}}</div>' +
+                '<div style="word-wrap: break-word">{{nmdcError.response.data.message || nmdcError.response.data}}</div>' +
+                '</div>' +
+                '<div ng-hide="nmdcError.response.status > 0">Could not contact the server.<br>Please check your Internet connection and try again.</div>' +
                 '</uib-alert>'
             };
         }])
