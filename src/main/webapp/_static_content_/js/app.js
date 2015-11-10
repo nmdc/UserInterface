@@ -138,7 +138,6 @@
         }])
         .filter('nmdcUriDecode', [function () {
             return function (uriComponent) {
-                console.log(decodeURIComponent(uriComponent));
                 return decodeURIComponent(uriComponent);
             };
         }])
