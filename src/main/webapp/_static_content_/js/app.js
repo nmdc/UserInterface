@@ -22,7 +22,7 @@
             var util = {};
             util.urlParametersToString = function (values) {
                 var string = '';
-                angular.forEach(values, function(value, key) {
+                angular.forEach(values, function (value, key) {
                     if (string.length > 0) string += '&';
                     string += key + '=' + encodeURIComponent(value);
                 });
@@ -45,7 +45,7 @@
                 if (longitude >= 180) return longitude - 360;
                 return longitude;
             };
-            util.clip = function(x, min, max) {
+            util.clip = function (x, min, max) {
                 return Math.max(Math.min(x, max), min);
             };
             util.relativeCCW = function (x1, y1, x2, y2, px, py) {
@@ -265,11 +265,7 @@
                     if (Model.search.text) {
                         var words = Model.search.text.match(/[^" ]\S*|".+?"/g)
                             .filter(function (word) { return word.length > 0; })
-                            .map(function (word) { if (word.indexOf("\"") > -1) {
-                                return word;
-                            } else {
-                                return '*' + word + '*';
-                            }});
+                            .map(function (word) { return word.indexOf('"') > -1 ? word : '*' + word + '*'; });
                         var textTerm = words.join(' OR ');
                         if (words.length > 1) textTerm = '(' + textTerm + ')';
                         terms.push(textTerm);

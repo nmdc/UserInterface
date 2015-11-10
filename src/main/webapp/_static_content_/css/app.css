@@ -106,13 +106,13 @@ a.nmdc-expansion span.nmdc-expansion-icon {
 .nmdc-expandable.ng-hide-add.ng-hide-animate,
 .nmdc-expandable.ng-leave {
     overflow: hidden;
-    transition:all cubic-bezier(0, .85, 0.15, 1) 0.2s;
+    transition: all cubic-bezier(0, .85, 0.15, 1) 0.2s;
 }
 
 .nmdc-expandable.ng-hide-remove.ng-hide-animate,
 .nmdc-expandable.ng-enter {
     overflow: hidden;
-    transition:all cubic-bezier(0.85, 0, 1, 0.15) 0.2s;
+    transition: all cubic-bezier(0.85, 0, 1, 0.15) 0.2s;
 }
 
 .nmdc-expandable.ng-hide,
@@ -147,6 +147,7 @@ a.nmdc-expansion span.nmdc-expansion-icon {
 .date-picker-right-container {
     position: relative;
 }
+
 .date-picker-right-container .dropdown-menu {
     left: auto !important;
     right: 0;
