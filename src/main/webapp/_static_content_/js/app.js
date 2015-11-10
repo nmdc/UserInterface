@@ -419,16 +419,14 @@
                     function addItem(layer) {
                         itemGroup.addLayer(layer);
                         layer.editing.enable();
-                        layer.on('edit', function () {
+                        layer.on('edit', wrapInScopeApply(function () {
                             if (Model.search.coverage.geographical.type === 'polygon' && Util.polygonSelfIntersects(layer.getLatLngs())) {
-                                $timeout(function () {
-                                    itemGroup.clearLayers();
-                                    addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
-                                }, 0, false);
+                                itemGroup.clearLayers();
+                                addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
                             } else {
                                 setCoordinates(layer.getLatLngs());
                             }
-                        });
+                        }));
                     }
 
                     function setType(type, drawer) {
@@ -489,7 +487,7 @@
                     scope.util = Util;
 
                     scope.$watch('marker', function () {
-                        $timeout(function () { updateMarker(scope.marker); }, 0, false);
+                        updateMarker(scope.marker);
                     });
                     scope.$watch('util.hasMouse', function () {
                         element.find('.nmdc-map-button-container').toggle(Util.hasMouse);
