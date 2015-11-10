@@ -10,7 +10,7 @@
                 <td ng-if="key != 'Data_URL'">{{value}}</td>
                 <td ng-if="key == 'Data_URL'">
                     <span ng-repeat="url in value track by $index">
-                        <a ng-if="url.length != 0" target="_blank" ng-href="{{url}}">{{url}}</a>
+                        <a ng-if="url.length != 0" target="_blank" ng-href="{{url | nmdcUriDecode}}">{{url | nmdcUriDecode}}</a>
                         <i ng-if="url.length == 0">missing</i>
                         <br>
                     </span>

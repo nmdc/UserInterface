@@ -132,6 +132,12 @@
                 return encodeURIComponent(uriComponent).replace(/%2F/g, '%252F').replace(/%5C/g, '%255C');
             };
         }])
+        .filter('nmdcUriDecode', [function () {
+            return function (uriComponent) {
+                console.log(decodeURIComponent(uriComponent));
+                return decodeURIComponent(uriComponent);
+            };
+        }])
         .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
 
             var defaultExpanded = $window.innerWidth >= 768;
