@@ -388,22 +388,22 @@
                             var boundingBox = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
                             boundingBox.title = 'Use map bounding box';
                             boundingBox.text = 'Box';
-                            boundingBox.onclick = function () { setType('mapBoundingBox', null); };
+                            boundingBox.onclick = wrapInScopeApply(function () { setType('mapBoundingBox', null); });
 
                             var rectangle = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-rectangle', container);
                             rectangle.title = 'Use a rectangle';
-                            rectangle.onclick = function () { setType('rectangle', rectangleDrawer); };
+                            rectangle.onclick = wrapInScopeApply(function () { setType('rectangle', rectangleDrawer); });
 
                             var polygon = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-polygon', container);
                             polygon.title = 'Use a polygon';
-                            polygon.onclick = function () { setType('polygon', polygonDrawer); };
+                            polygon.onclick = wrapInScopeApply(function () { setType('polygon', polygonDrawer); });
 
                             return container;
                         }
                     });
                     map.addControl(new DrawControl());
 
-                    map.on('moveend', function () {
+                    map.on('moveend', wrapInScopeApply(function () {
                         if (Math.abs(map.getCenter().lng - map.getCenter().wrap().lng) > 1) {
                             map.panTo(map.getCenter().wrap(), {animate: false});
                         }
@@ -412,13 +412,13 @@
                         if (Model.search.coverage.geographical.type === 'mapBoundingBox') {
                             setCoordinates(L.rectangle(map.getBounds()).getLatLngs());
                         }
-                    });
+                    }));
 
-                    map.on('draw:created', function (e) {
+                    map.on('draw:created', wrapInScopeApply(function (e) {
                         var layer = e.layer;
                         addItem(layer);
                         setCoordinates(layer.getLatLngs());
-                    });
+                    }));
 
                     function addItem(layer) {
                         itemGroup.addLayer(layer);
@@ -436,10 +436,8 @@
                     }
 
                     function setType(type, drawer) {
-                        scope.$apply(function () {
-                            Model.search.coverage.geographical.type = type;
-                            Model.search.coverage.geographical.coordinates = [];
-                        });
+                        Model.search.coverage.geographical.type = type;
+                        Model.search.coverage.geographical.coordinates = [];
                         itemGroup.clearLayers();
                         rectangleDrawer.disable();
                         polygonDrawer.disable();
@@ -447,9 +445,7 @@
                     }
 
                     function setCoordinates(coordinates) {
-                        scope.$apply(function () {
-                            Model.search.coverage.geographical.coordinates = angular.copy(coordinates);
-                        });
+                        Model.search.coverage.geographical.coordinates = angular.copy(coordinates);
                     }
 
                     function parseCoordinates(coordinates) {
@@ -476,6 +472,13 @@
                                 if (!Model.search.coverage.geographical.selected) map.setView(point, Math.max(map.getZoom(), 3), {animate: true});
                             }
                         }
+                    }
+
+                    function wrapInScopeApply(f) {
+                        return function () {
+                            var a = arguments;
+                            scope.$apply(function () { f.apply(this, a); });
+                        };
                     }
 
                     function init() {
