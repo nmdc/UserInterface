@@ -397,6 +397,27 @@
                     var rectangleDrawer = new L.Draw.Rectangle(map, drawerOptions);
                     var polygonDrawer = new L.Draw.Polygon(map, drawerOptions);
 
+                    var MaximizeControl = L.Control.extend({
+                        options: {position: 'topleft'},
+                        onAdd: function (map) {
+                            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+
+                            var button = L.DomUtil.create('a', 'nmdc-map-button', container);
+                            button.innerHTML = '❐';
+                            button.title = 'Maximize map';
+                            button.onclick = wrapInScopeApply(function() {
+                                var maximize = !element.hasClass('nmdc-map-maximize');
+                                element.toggleClass('nmdc-map-maximize', maximize);
+                                element.parent().toggleClass('nmdc-map-maximize-parent', maximize);
+                                button.title = maximize ? 'Restore map' : 'Maximize map';
+                                map._onResize();
+                            });
+
+                            return container;
+                        }
+                    });
+                    map.addControl(new MaximizeControl());
+
                     var DrawControl = L.Control.extend({
                         options: {position: 'topleft'},
                         onAdd: function (map) {
@@ -404,7 +425,7 @@
 
                             var boundingBox = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
                             boundingBox.title = 'Use map bounding box';
-                            boundingBox.text = 'Box';
+                            boundingBox.innerHTML = 'Box';
                             boundingBox.onclick = wrapInScopeApply(function () { setType('mapBoundingBox', null); });
 
                             var rectangle = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-rectangle', container);
