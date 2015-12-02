@@ -396,6 +396,7 @@
                     var drawerOptions = {shapeOptions: {color: '#333333'}, allowIntersection: false};
                     var rectangleDrawer = new L.Draw.Rectangle(map, drawerOptions);
                     var polygonDrawer = new L.Draw.Polygon(map, drawerOptions);
+                    var boundingBoxRectangle = L.rectangle(map.getBounds(), {color: '#333333'});
 
                     var MaximizeControl = L.Control.extend({
                         options: {position: 'topleft'},
@@ -411,6 +412,8 @@
                                 element.parent().toggleClass('nmdc-map-maximize-parent', maximize);
                                 button.title = maximize ? 'Restore map' : 'Maximize map';
                                 map._onResize();
+                                var bounds = itemGroup.getBounds();
+                                if (bounds.isValid()) $timeout(function() { map.fitBounds(bounds); }, 100);
                             });
 
                             return container;
@@ -421,20 +424,30 @@
                     var DrawControl = L.Control.extend({
                         options: {position: 'topleft'},
                         onAdd: function (map) {
-                            var container = L.DomUtil.create('div', 'nmdc-map-button-container leaflet-bar leaflet-control leaflet-draw-section leaflet-draw-toolbar');
+                            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-draw-section leaflet-draw-toolbar');
 
-                            var boundingBox = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
-                            boundingBox.title = 'Use map bounding box';
-                            boundingBox.innerHTML = 'Box';
-                            boundingBox.onclick = wrapInScopeApply(function () { setType('mapBoundingBox', null); });
+                            var boundingBoxButton = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
+                            boundingBoxButton.title = 'Use current map bounding box';
+                            boundingBoxButton.innerHTML = 'Box';
+                            boundingBoxButton.onclick = wrapInScopeApply(function () {
+                                boundingBoxRectangle.setBounds(map.getBounds());
+                                setType('mapBoundingBox', boundingBoxRectangle.getLatLngs());
+                                itemGroup.addLayer(boundingBoxRectangle);
+                            });
 
-                            var rectangle = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-rectangle', container);
-                            rectangle.title = 'Use a rectangle';
-                            rectangle.onclick = wrapInScopeApply(function () { setType('rectangle', rectangleDrawer); });
+                            var rectangleButton = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-draw leaflet-draw-draw-rectangle', container);
+                            rectangleButton.title = 'Use a rectangle';
+                            rectangleButton.onclick = wrapInScopeApply(function () {
+                                setType('rectangle');
+                                rectangleDrawer.enable();
+                            });
 
-                            var polygon = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-polygon', container);
-                            polygon.title = 'Use a polygon';
-                            polygon.onclick = wrapInScopeApply(function () { setType('polygon', polygonDrawer); });
+                            var polygonButton = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-draw leaflet-draw-draw-polygon', container);
+                            polygonButton.title = 'Use a polygon';
+                            polygonButton.onclick = wrapInScopeApply(function () {
+                                setType('polygon');
+                                polygonDrawer.enable();
+                            });
 
                             return container;
                         }
@@ -447,37 +460,33 @@
                         }
                         Model.map.options.center = map.getCenter();
                         Model.map.options.zoom = map.getZoom();
-                        if (Model.search.coverage.geographical.type === 'mapBoundingBox') {
-                            setCoordinates(L.rectangle(map.getBounds()).getLatLngs());
-                        }
                     }));
 
                     map.on('draw:created', wrapInScopeApply(function (e) {
                         var layer = e.layer;
-                        addItem(layer);
+                        addDrawItem(layer);
                         setCoordinates(layer.getLatLngs());
                     }));
 
-                    function addItem(layer) {
+                    function addDrawItem(layer) {
                         itemGroup.addLayer(layer);
                         layer.editing.enable();
                         layer.on('edit', wrapInScopeApply(function () {
                             if (Model.search.coverage.geographical.type === 'polygon' && Util.polygonSelfIntersects(layer.getLatLngs())) {
                                 itemGroup.clearLayers();
-                                addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
+                                addDrawItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
                             } else {
                                 setCoordinates(layer.getLatLngs());
                             }
                         }));
                     }
 
-                    function setType(type, drawer) {
+                    function setType(type, coordinates) {
                         Model.search.coverage.geographical.type = type;
-                        Model.search.coverage.geographical.coordinates = [];
+                        Model.search.coverage.geographical.coordinates = coordinates || [];
                         itemGroup.clearLayers();
                         rectangleDrawer.disable();
                         polygonDrawer.disable();
-                        if (drawer) drawer.enable();
                     }
 
                     function setCoordinates(coordinates) {
@@ -520,9 +529,12 @@
                     function init() {
                         var coordinates = angular.copy(Model.search.coverage.geographical.coordinates);
                         var type = Model.search.coverage.geographical.type;
-                        if (type === 'rectangle') addItem(L.rectangle(coordinates));
-                        if (type === 'polygon') addItem(L.polygon(coordinates));
-                        if (type === 'mapBoundingBox') Model.search.coverage.geographical.coordinates = L.rectangle(map.getBounds()).getLatLngs();
+                        if (type === 'rectangle') addDrawItem(L.rectangle(coordinates));
+                        if (type === 'polygon') addDrawItem(L.polygon(coordinates));
+                        if (type === 'mapBoundingBox') {
+                            boundingBoxRectangle.setLatLngs(coordinates);
+                            itemGroup.addLayer(boundingBoxRectangle);
+                        }
                     }
 
                     init();
@@ -532,8 +544,8 @@
                         updateMarker(scope.marker);
                     });
                     scope.$watch('util.hasMouse', function () {
-                        element.find('.nmdc-map-button-container').toggle(Util.hasMouse);
-                        if (!Util.hasMouse) setType('mapBoundingBox', null);
+                        element.find('.nmdc-map-button-draw').toggle(Util.hasMouse);
+                        if (!Util.hasMouse && Model.search.coverage.geographical.type !== 'mapBoundingBox') setType('mapBoundingBox', []);
                     });
                     scope.$on('$destroy', function () {
                         map.remove();
