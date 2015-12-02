@@ -45,7 +45,8 @@
                             <label for="operation" class="col-lg-4 control-label">Operation</label>
 
                             <div class="col-lg-8">
-                                <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation">
+                                <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation"
+                                        ng-change="ctrl.model.search.coverage.geographical.selected = true">
                                     <option value="IsWithin">Is within</option>
                                     <option value="Intersects">Intersects</option>
                                 </select>
@@ -71,7 +72,8 @@
                             <label for="operation" class="col-lg-4 control-label">Operation</label>
 
                             <div class="col-lg-8">
-                                <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation">
+                                <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation"
+                                        ng-change="ctrl.model.search.coverage.temporal.selected = true">
                                     <option value="IsWithin">Is within</option>
                                     <option value="Intersects">Intersects</option>
                                 </select>
@@ -85,6 +87,7 @@
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
                                     <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
+                                           ng-change="ctrl.model.search.coverage.temporal.selected = true"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -98,6 +101,7 @@
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
                                     <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
+                                           ng-change="ctrl.model.search.coverage.temporal.selected = true"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>

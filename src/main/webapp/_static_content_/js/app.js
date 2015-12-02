@@ -482,6 +482,7 @@
                     }
 
                     function setType(type, coordinates) {
+                        Model.search.coverage.geographical.selected = true;
                         Model.search.coverage.geographical.type = type;
                         Model.search.coverage.geographical.coordinates = coordinates || [];
                         itemGroup.clearLayers();
