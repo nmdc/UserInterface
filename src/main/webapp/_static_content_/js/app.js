@@ -404,12 +404,14 @@
                             var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
 
                             var button = L.DomUtil.create('a', 'nmdc-map-button', container);
-                            button.innerHTML = '❐';
+                            var icon = $(L.DomUtil.create('span', 'glyphicon glyphicon-resize-full', button));
                             button.title = 'Maximize map';
                             button.onclick = wrapInScopeApply(function() {
                                 var maximize = !element.hasClass('nmdc-map-maximize');
                                 element.toggleClass('nmdc-map-maximize', maximize);
                                 element.parent().toggleClass('nmdc-map-maximize-parent', maximize);
+                                icon.toggleClass('glyphicon-resize-full', !maximize);
+                                icon.toggleClass('glyphicon-resize-small', maximize);
                                 button.title = maximize ? 'Restore map' : 'Maximize map';
                                 map._onResize();
                                 var bounds = itemGroup.getBounds();
