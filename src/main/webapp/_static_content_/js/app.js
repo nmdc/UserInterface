@@ -406,7 +406,7 @@
                             var button = L.DomUtil.create('a', 'nmdc-map-button', container);
                             var icon = $(L.DomUtil.create('span', 'glyphicon glyphicon-resize-full', button));
                             button.title = 'Maximize map';
-                            button.onclick = wrapInScopeApply(function() {
+                            button.onclick = wrapInScopeApply(function () {
                                 var maximize = !element.hasClass('nmdc-map-maximize');
                                 element.toggleClass('nmdc-map-maximize', maximize);
                                 element.parent().toggleClass('nmdc-map-maximize-parent', maximize);
@@ -415,7 +415,7 @@
                                 button.title = maximize ? 'Restore map' : 'Maximize map';
                                 map._onResize();
                                 var bounds = itemGroup.getBounds();
-                                if (bounds.isValid()) $timeout(function() { map.fitBounds(bounds); }, 100);
+                                if (bounds.isValid()) $timeout(function () { map.fitBounds(bounds); }, 100);
                             });
 
                             return container;
@@ -560,8 +560,7 @@
             return {
                 restrict: 'A',
                 scope: {nmdcError: '='},
-                template:
-                '<uib-alert ng-show="nmdcError" type="danger">' +
+                template: '<uib-alert ng-show="nmdcError" type="danger">' +
                 '<h4>{{nmdcError.title}}</h4>' +
                 '<div ng-show="nmdcError.response.status > 0">' +
                 '<div ng-show="nmdcError.response.statusText">{{nmdcError.response.status}} - {{nmdcError.response.statusText}}</div>' +

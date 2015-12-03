@@ -33,11 +33,11 @@
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.selected"> Filter by
-                        <span ng-switch="ctrl.model.search.coverage.geographical.type">
-                            <span ng-switch-when="rectangle">rectangle</span>
-                            <span ng-switch-when="polygon">polygon</span>
-                            <span ng-switch-default>selected map bounding box</span>
-                        </span>
+                            <span ng-switch="ctrl.model.search.coverage.geographical.type">
+                                <span ng-switch-when="rectangle">rectangle</span>
+                                <span ng-switch-when="polygon">polygon</span>
+                                <span ng-switch-default>selected map bounding box</span>
+                            </span>
                         </label>
                     </div>
                     <div class="form-horizontal">
@@ -89,9 +89,9 @@
                                     <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
                                            ng-change="ctrl.model.search.coverage.temporal.selected = true"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -103,9 +103,9 @@
                                     <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
                                            ng-change="ctrl.model.search.coverage.temporal.selected = true"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -129,11 +129,11 @@
             <div ng-show="ctrl.model.ready">
                 <div class="nmdc-selected-facets">
                     Selected facets:
-                <span ng-repeat="facet in ctrl.model.facets">
-                    <span ng-repeat="node in facet.selectedNodes">
-                        <a class="btn btn-default btn-xs" href="" ng-click="facet.selectedNodes.splice($index, 1); ctrl.search()">{{node.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                    <span ng-repeat="facet in ctrl.model.facets">
+                        <span ng-repeat="node in facet.selectedNodes">
+                            <a class="btn btn-default btn-xs" href="" ng-click="facet.selectedNodes.splice($index, 1); ctrl.search()">{{node.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
+                        </span>
                     </span>
-                </span>
                     <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                     <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.temporal.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.temporal.selected">Temporal coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                 </div>
