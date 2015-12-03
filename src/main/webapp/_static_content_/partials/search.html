@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div class="form-horizontal">
-                        <div class="form-group">
+                        <div class="form-group" ng-class="ctrl.model.search.coverage.temporal.beginDate ? '' : 'has-error has-feedback'">
                             <label for="beginDate" class="col-lg-2 control-label">From</label>
 
                             <div class="col-lg-10">
@@ -95,7 +95,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" ng-class="ctrl.model.search.coverage.temporal.endDate ? '' : 'has-error has-feedback'">
                             <label for="endDate" class="col-lg-2 control-label">To</label>
 
                             <div class="col-lg-10">

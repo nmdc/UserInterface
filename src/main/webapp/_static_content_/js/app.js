@@ -305,10 +305,10 @@
                     parameters.q = getSolrQuery();
                     parameters.offset = (Model.search.currentPage - 1) * Model.search.itemsPerPage;
                     if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate !== null || Model.search.coverage.temporal.endDate !== null)) {
-                        if (Model.search.coverage.temporal.beginDate !== null) {
+                        if (Model.search.coverage.temporal.beginDate) {
                             parameters.beginDate = Util.formatDateSearch(Model.search.coverage.temporal.beginDate);
                         }
-                        if (Model.search.coverage.temporal.endDate !== null) {
+                        if (Model.search.coverage.temporal.endDate) {
                             parameters.endDate = Util.formatDateSearch(Model.search.coverage.temporal.endDate);
                         }
                         if (Model.search.coverage.temporal.operation === 'IsWithin') {
