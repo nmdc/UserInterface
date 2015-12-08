@@ -32,12 +32,10 @@
             util.twoDigits = function (x) {
                 return x < 10 ? '0' + x : x;
             };
-            util.formatDate = function (date) {
-                return date.getFullYear() + '-' + util.twoDigits(date.getMonth() + 1) + '-' + util.twoDigits(date.getDate());
-            };
-            util.formatDateSearch = function (date) {
-                var str = date.toISOString();
-                return str.substring(0, str.length - 5) + 'Z';
+            util.formatDate = function (date, hours, minutes, seconds) {
+                // Date picker uses local timezone
+                return date.getFullYear() + '-' + util.twoDigits(date.getMonth() + 1) + '-' + util.twoDigits(date.getDate()) + 'T' +
+                    util.twoDigits(hours) + ':' + util.twoDigits(minutes) + ':' + util.twoDigits(seconds) + 'Z';
             };
             util.normalizeLongitude = function (longitude) {
                 longitude = longitude % 360;
@@ -306,10 +304,10 @@
                     parameters.offset = (Model.search.currentPage - 1) * Model.search.itemsPerPage;
                     if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate || Model.search.coverage.temporal.endDate)) {
                         if (Model.search.coverage.temporal.beginDate) {
-                            parameters.beginDate = Util.formatDateSearch(Model.search.coverage.temporal.beginDate);
+                            parameters.beginDate = Util.formatDate(Model.search.coverage.temporal.beginDate, 0, 0, 0);
                         }
                         if (Model.search.coverage.temporal.endDate) {
-                            parameters.endDate = Util.formatDateSearch(Model.search.coverage.temporal.endDate);
+                            parameters.endDate = Util.formatDate(Model.search.coverage.temporal.endDate, 23, 59, 59);
                         }
                         if (Model.search.coverage.temporal.operation === 'IsWithin') {
                             parameters.dateSearchMode = 'isWithin';
