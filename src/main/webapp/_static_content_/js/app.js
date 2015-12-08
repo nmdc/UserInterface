@@ -115,7 +115,7 @@
             };
 
             util.hasMouse = $window.innerWidth >= 768;
-            angular.element($window).on('mousemove touchmove touchstart', function setHasMouse(e) {
+            angular.element($window).on('mousemove touchmove touchstart', function (e) {
                 e = e.originalEvent;
                 var hasMouse = false;
                 if (e.type === 'mousemove') {
@@ -408,7 +408,7 @@
                             var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
 
                             var button = L.DomUtil.create('a', 'nmdc-map-button', container);
-                            var icon = $(L.DomUtil.create('span', 'glyphicon glyphicon-resize-full', button));
+                            var icon = angular.element(L.DomUtil.create('span', 'glyphicon glyphicon-resize-full', button));
                             button.title = 'Maximize map';
                             button.onclick = wrapInScopeApply(function () {
                                 var maximize = !element.hasClass('nmdc-map-maximize');
