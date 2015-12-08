@@ -354,8 +354,14 @@
             };
 
             ctrl.date = {
-                begin: {opened: false},
-                end: {opened: false},
+                begin: {value: Model.search.coverage.temporal.beginDate},
+                end: {value: Model.search.coverage.temporal.endDate},
+                change: function (which) {
+                    Model.search.coverage.temporal.selected = true;
+                    var d = ctrl.date[which];
+                    d.error = d.element.val() === '' !== !d.value;
+                    if (!d.error) Model.search.coverage.temporal[which + 'Date'] = d.value;
+                },
                 open: function (which, event) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -596,6 +602,28 @@
 
                     angular.element($window).on('scroll', onScroll);
                     scope.$on('$destroy', function () { angular.element($window).off('scroll', onScroll); });
+                }
+            };
+        }])
+        .directive('nmdcGetElement', ['$parse', function ($parse) {
+            return {
+                link: function (scope, element, attrs) {
+                    var action = $parse(attrs.nmdcGetElement);
+                    action(scope, {element: element});
+                }
+            };
+        }])
+        .directive('nmdcInputChange', ['$parse', '$timeout', function ($parse, $timeout) {
+            return {
+                link: function (scope, element, attrs) {
+                    var action = $parse(attrs.nmdcInputChange);
+                    var listener = function () {
+                        $timeout(function () { action(scope, {value: element.val()}); });
+                    };
+                    element.on('keydown input', listener);
+                    scope.$on('$destroy', function () {
+                        element.off('keydown input', listener);
+                    });
                 }
             };
         }])

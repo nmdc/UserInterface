@@ -81,13 +81,15 @@
                         </div>
                     </div>
                     <div class="form-horizontal">
-                        <div class="form-group" ng-class="ctrl.model.search.coverage.temporal.beginDate ? '' : 'has-error has-feedback'">
+                        <div class="form-group" ng-class="ctrl.date.begin.error ? 'has-error has-feedback' : ''">
                             <label for="beginDate" class="col-lg-2 control-label">From</label>
 
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
-                                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
-                                           ng-change="ctrl.model.search.coverage.temporal.selected = true"
+                                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.date.begin.value"
+                                           ng-change="ctrl.date.change('begin')"
+                                           nmdc-input-change="ctrl.date.change('begin')"
+                                           nmdc-get-element="ctrl.date.begin.element = element"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -95,13 +97,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" ng-class="ctrl.model.search.coverage.temporal.endDate ? '' : 'has-error has-feedback'">
+                        <div class="form-group" ng-class="ctrl.date.end.error ? 'has-error has-feedback' : ''">
                             <label for="endDate" class="col-lg-2 control-label">To</label>
 
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
-                                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
-                                           ng-change="ctrl.model.search.coverage.temporal.selected = true"
+                                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.date.end.value"
+                                           ng-change="ctrl.date.change('end')"
+                                           nmdc-input-change="ctrl.date.change('end')"
+                                           nmdc-get-element="ctrl.date.end.element = element"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
                                     <span class="input-group-btn">
                                         <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
