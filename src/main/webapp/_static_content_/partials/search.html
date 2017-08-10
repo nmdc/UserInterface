@@ -33,11 +33,11 @@
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" ng-model="ctrl.model.search.coverage.geographical.selected"> Filter by
-                            <span ng-switch="ctrl.model.search.coverage.geographical.type">
-                                <span ng-switch-when="rectangle">rectangle</span>
-                                <span ng-switch-when="polygon">polygon</span>
-                                <span ng-switch-default>selected map bounding box</span>
-                            </span>
+                        <span ng-switch="ctrl.model.search.coverage.geographical.type">
+                            <span ng-switch-when="rectangle">rectangle</span>
+                            <span ng-switch-when="polygon">polygon</span>
+                            <span ng-switch-default>map bounding box</span>
+                        </span>
                         </label>
                     </div>
                     <div class="form-horizontal">
@@ -45,17 +45,14 @@
                             <label for="operation" class="col-lg-4 control-label">Operation</label>
 
                             <div class="col-lg-8">
-                                <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation"
-                                        ng-change="ctrl.model.search.coverage.geographical.selected = true">
+                                <select id="operation" class="form-control" ng-model="ctrl.model.search.coverage.geographical.operation">
                                     <option value="IsWithin">Is within</option>
                                     <option value="Intersects">Intersects</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <div class="nmdc-map" nmdc-map marker="ctrl.marker"></div>
-                    </div>
+                    <div class="nmdc-map" nmdc-map marker="ctrl.marker"></div>
                 </div>
             </div>
 
@@ -72,8 +69,7 @@
                             <label for="operation" class="col-lg-4 control-label">Operation</label>
 
                             <div class="col-lg-8">
-                                <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation"
-                                        ng-change="ctrl.model.search.coverage.temporal.selected = true">
+                                <select id="operation_temp" class="form-control" ng-model="ctrl.model.search.coverage.temporal.operation">
                                     <option value="IsWithin">Is within</option>
                                     <option value="Intersects">Intersects</option>
                                 </select>
@@ -81,35 +77,29 @@
                         </div>
                     </div>
                     <div class="form-horizontal">
-                        <div class="form-group" ng-class="ctrl.date.begin.error ? 'has-error has-feedback' : ''">
+                        <div class="form-group">
                             <label for="beginDate" class="col-lg-2 control-label">From</label>
 
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
-                                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.date.begin.value"
-                                           ng-change="ctrl.date.change('begin')"
-                                           nmdc-input-change="ctrl.date.change('begin')"
-                                           nmdc-get-element="ctrl.date.begin.element = element"
+                                    <input id="beginDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.beginDate"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.begin.opened" datepicker-mode="'month'">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                    </span>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="ctrl.date.open('begin', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group" ng-class="ctrl.date.end.error ? 'has-error has-feedback' : ''">
+                        <div class="form-group">
                             <label for="endDate" class="col-lg-2 control-label">To</label>
 
                             <div class="col-lg-10">
                                 <div class="input-group date-picker-right-container">
-                                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.date.end.value"
-                                           ng-change="ctrl.date.change('end')"
-                                           nmdc-input-change="ctrl.date.change('end')"
-                                           nmdc-get-element="ctrl.date.end.element = element"
+                                    <input id="endDate" class="form-control" type="text" ng-model="ctrl.model.search.coverage.temporal.endDate"
                                            uib-datepicker-popup="yyyy-MM-dd" is-open="ctrl.date.end.opened" datepicker-mode="'month'">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                    </span>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="ctrl.date.open('end', $event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
                                 </div>
                             </div>
                         </div>
@@ -133,11 +123,11 @@
             <div ng-show="ctrl.model.ready">
                 <div class="nmdc-selected-facets">
                     Selected facets:
-                    <span ng-repeat="facet in ctrl.model.facets">
-                        <span ng-repeat="node in facet.selectedNodes">
-                            <a class="btn btn-default btn-xs" href="" ng-click="facet.selectedNodes.splice($index, 1); ctrl.search()">{{node.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
-                        </span>
+                <span ng-repeat="facet in ctrl.model.facets">
+                    <span ng-repeat="node in facet.selectedNodes">
+                        <a class="btn btn-default btn-xs" href="" ng-click="facet.selectedNodes.splice($index, 1); ctrl.search()">{{node.value}}<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                     </span>
+                </span>
                     <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.geographical.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.geographical.selected">Geographical coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                     <a class="btn btn-default btn-xs" href="" ng-click="ctrl.model.search.coverage.temporal.selected = false; ctrl.search()" ng-if="ctrl.model.search.coverage.temporal.selected">Temporal coverage<span class="nmdc-deselect-facet glyphicon glyphicon-remove-circle"></span></a>
                 </div>
@@ -166,7 +156,7 @@
                     <p>
                         {{item.Data_Summary}}
                     </p>
-                    <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID | nmdcUriComponent}}">Details</a>
+                    <a class="btn btn-info btn-xs" ng-href="{{item.landingpage}}">Details</a>
                 </div>
                 <hr>
             </div>

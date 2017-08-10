@@ -32,10 +32,12 @@
             util.twoDigits = function (x) {
                 return x < 10 ? '0' + x : x;
             };
-            util.formatDate = function (date, hours, minutes, seconds) {
-                // Date picker uses local timezone
-                return date.getFullYear() + '-' + util.twoDigits(date.getMonth() + 1) + '-' + util.twoDigits(date.getDate()) + 'T' +
-                    util.twoDigits(hours) + ':' + util.twoDigits(minutes) + ':' + util.twoDigits(seconds) + 'Z';
+            util.formatDate = function (date) {
+                return date.getFullYear() + '-' + util.twoDigits(date.getMonth() + 1) + '-' + util.twoDigits(date.getDate());
+            };
+            util.formatDateSearch = function (date) {
+                var str = date.toISOString();
+                return str.substring(0, str.length - 5) + 'Z';
             };
             util.normalizeLongitude = function (longitude) {
                 longitude = longitude % 360;
@@ -115,7 +117,7 @@
             };
 
             util.hasMouse = $window.innerWidth >= 768;
-            angular.element($window).on('mousemove touchmove touchstart', function (e) {
+            angular.element($window).on('mousemove touchmove touchstart', function setHasMouse(e) {
                 e = e.originalEvent;
                 var hasMouse = false;
                 if (e.type === 'mousemove') {
@@ -302,12 +304,12 @@
                     var parameters = {};
                     parameters.q = getSolrQuery();
                     parameters.offset = (Model.search.currentPage - 1) * Model.search.itemsPerPage;
-                    if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate || Model.search.coverage.temporal.endDate)) {
-                        if (Model.search.coverage.temporal.beginDate) {
-                            parameters.beginDate = Util.formatDate(Model.search.coverage.temporal.beginDate, 0, 0, 0);
+                    if (Model.search.coverage.temporal.selected && (Model.search.coverage.temporal.beginDate !== null || Model.search.coverage.temporal.endDate !== null)) {
+                        if (Model.search.coverage.temporal.beginDate !== null) {
+                            parameters.beginDate = Util.formatDateSearch(Model.search.coverage.temporal.beginDate);
                         }
-                        if (Model.search.coverage.temporal.endDate) {
-                            parameters.endDate = Util.formatDate(Model.search.coverage.temporal.endDate, 23, 59, 59);
+                        if (Model.search.coverage.temporal.endDate !== null) {
+                            parameters.endDate = Util.formatDateSearch(Model.search.coverage.temporal.endDate);
                         }
                         if (Model.search.coverage.temporal.operation === 'IsWithin') {
                             parameters.dateSearchMode = 'isWithin';
@@ -352,14 +354,8 @@
             };
 
             ctrl.date = {
-                begin: {value: Model.search.coverage.temporal.beginDate},
-                end: {value: Model.search.coverage.temporal.endDate},
-                change: function (which) {
-                    Model.search.coverage.temporal.selected = true;
-                    var d = ctrl.date[which];
-                    d.error = d.element.val() === '' !== !d.value;
-                    if (!d.error) Model.search.coverage.temporal[which + 'Date'] = d.value;
-                },
+                begin: {opened: false},
+                end: {opened: false},
                 open: function (which, event) {
                     event.preventDefault();
                     event.stopPropagation();
@@ -400,60 +396,24 @@
                     var drawerOptions = {shapeOptions: {color: '#333333'}, allowIntersection: false};
                     var rectangleDrawer = new L.Draw.Rectangle(map, drawerOptions);
                     var polygonDrawer = new L.Draw.Polygon(map, drawerOptions);
-                    var boundingBoxRectangle = L.rectangle(map.getBounds(), {color: '#333333'});
-
-                    var MaximizeControl = L.Control.extend({
-                        options: {position: 'topleft'},
-                        onAdd: function (map) {
-                            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-
-                            var button = L.DomUtil.create('a', 'nmdc-map-button', container);
-                            var icon = angular.element(L.DomUtil.create('span', 'glyphicon glyphicon-resize-full', button));
-                            button.title = 'Maximize map';
-                            button.onclick = wrapInScopeApply(function () {
-                                var maximize = !element.hasClass('nmdc-map-maximize');
-                                element.toggleClass('nmdc-map-maximize', maximize);
-                                element.parent().toggleClass('nmdc-map-maximize-parent', maximize);
-                                icon.toggleClass('glyphicon-resize-full', !maximize);
-                                icon.toggleClass('glyphicon-resize-small', maximize);
-                                button.title = maximize ? 'Restore map' : 'Maximize map';
-                                map._onResize();
-                                var bounds = itemGroup.getBounds();
-                                if (bounds.isValid()) $timeout(function () { map.fitBounds(bounds); }, 100);
-                            });
-
-                            return container;
-                        }
-                    });
-                    map.addControl(new MaximizeControl());
 
                     var DrawControl = L.Control.extend({
                         options: {position: 'topleft'},
                         onAdd: function (map) {
-                            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-draw-section leaflet-draw-toolbar');
+                            var container = L.DomUtil.create('div', 'nmdc-map-button-container leaflet-bar leaflet-control leaflet-draw-section leaflet-draw-toolbar');
 
-                            var boundingBoxButton = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
-                            boundingBoxButton.title = 'Use current map bounding box';
-                            boundingBoxButton.innerHTML = 'Box';
-                            boundingBoxButton.onclick = wrapInScopeApply(function () {
-                                boundingBoxRectangle.setBounds(map.getBounds());
-                                setType('mapBoundingBox', boundingBoxRectangle.getLatLngs());
-                                itemGroup.addLayer(boundingBoxRectangle);
-                            });
+                            var boundingBox = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-bounding-box', container);
+                            boundingBox.title = 'Use map bounding box';
+                            boundingBox.text = 'Box';
+                            boundingBox.onclick = wrapInScopeApply(function () { setType('mapBoundingBox', null); });
 
-                            var rectangleButton = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-draw leaflet-draw-draw-rectangle', container);
-                            rectangleButton.title = 'Use a rectangle';
-                            rectangleButton.onclick = wrapInScopeApply(function () {
-                                setType('rectangle');
-                                rectangleDrawer.enable();
-                            });
+                            var rectangle = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-rectangle', container);
+                            rectangle.title = 'Use a rectangle';
+                            rectangle.onclick = wrapInScopeApply(function () { setType('rectangle', rectangleDrawer); });
 
-                            var polygonButton = L.DomUtil.create('a', 'nmdc-map-button nmdc-map-button-draw leaflet-draw-draw-polygon', container);
-                            polygonButton.title = 'Use a polygon';
-                            polygonButton.onclick = wrapInScopeApply(function () {
-                                setType('polygon');
-                                polygonDrawer.enable();
-                            });
+                            var polygon = L.DomUtil.create('a', 'nmdc-map-button leaflet-draw-draw-polygon', container);
+                            polygon.title = 'Use a polygon';
+                            polygon.onclick = wrapInScopeApply(function () { setType('polygon', polygonDrawer); });
 
                             return container;
                         }
@@ -466,34 +426,37 @@
                         }
                         Model.map.options.center = map.getCenter();
                         Model.map.options.zoom = map.getZoom();
+                        if (Model.search.coverage.geographical.type === 'mapBoundingBox') {
+                            setCoordinates(L.rectangle(map.getBounds()).getLatLngs());
+                        }
                     }));
 
                     map.on('draw:created', wrapInScopeApply(function (e) {
                         var layer = e.layer;
-                        addDrawItem(layer);
+                        addItem(layer);
                         setCoordinates(layer.getLatLngs());
                     }));
 
-                    function addDrawItem(layer) {
+                    function addItem(layer) {
                         itemGroup.addLayer(layer);
                         layer.editing.enable();
                         layer.on('edit', wrapInScopeApply(function () {
                             if (Model.search.coverage.geographical.type === 'polygon' && Util.polygonSelfIntersects(layer.getLatLngs())) {
                                 itemGroup.clearLayers();
-                                addDrawItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
+                                addItem(L.polygon(angular.copy(Model.search.coverage.geographical.coordinates)));
                             } else {
                                 setCoordinates(layer.getLatLngs());
                             }
                         }));
                     }
 
-                    function setType(type, coordinates) {
-                        Model.search.coverage.geographical.selected = true;
+                    function setType(type, drawer) {
                         Model.search.coverage.geographical.type = type;
-                        Model.search.coverage.geographical.coordinates = coordinates || [];
+                        Model.search.coverage.geographical.coordinates = [];
                         itemGroup.clearLayers();
                         rectangleDrawer.disable();
                         polygonDrawer.disable();
+                        if (drawer) drawer.enable();
                     }
 
                     function setCoordinates(coordinates) {
@@ -536,12 +499,9 @@
                     function init() {
                         var coordinates = angular.copy(Model.search.coverage.geographical.coordinates);
                         var type = Model.search.coverage.geographical.type;
-                        if (type === 'rectangle') addDrawItem(L.rectangle(coordinates));
-                        if (type === 'polygon') addDrawItem(L.polygon(coordinates));
-                        if (type === 'mapBoundingBox') {
-                            boundingBoxRectangle.setLatLngs(coordinates);
-                            itemGroup.addLayer(boundingBoxRectangle);
-                        }
+                        if (type === 'rectangle') addItem(L.rectangle(coordinates));
+                        if (type === 'polygon') addItem(L.polygon(coordinates));
+                        if (type === 'mapBoundingBox') Model.search.coverage.geographical.coordinates = L.rectangle(map.getBounds()).getLatLngs();
                     }
 
                     init();
@@ -551,8 +511,8 @@
                         updateMarker(scope.marker);
                     });
                     scope.$watch('util.hasMouse', function () {
-                        element.find('.nmdc-map-button-draw').toggle(Util.hasMouse);
-                        if (!Util.hasMouse && Model.search.coverage.geographical.type !== 'mapBoundingBox') setType('mapBoundingBox', []);
+                        element.find('.nmdc-map-button-container').toggle(Util.hasMouse);
+                        if (!Util.hasMouse) setType('mapBoundingBox', null);
                     });
                     scope.$on('$destroy', function () {
                         map.remove();
@@ -564,7 +524,8 @@
             return {
                 restrict: 'A',
                 scope: {nmdcError: '='},
-                template: '<uib-alert ng-show="nmdcError" type="danger">' +
+                template:
+                '<uib-alert ng-show="nmdcError" type="danger">' +
                 '<h4>{{nmdcError.title}}</h4>' +
                 '<div ng-show="nmdcError.response.status > 0">' +
                 '<div ng-show="nmdcError.response.statusText">{{nmdcError.response.status}} - {{nmdcError.response.statusText}}</div>' +
@@ -603,47 +564,33 @@
                 }
             };
         }])
-        .directive('nmdcGetElement', ['$parse', function ($parse) {
-            return {
-                link: function (scope, element, attrs) {
-                    var action = $parse(attrs.nmdcGetElement);
-                    action(scope, {element: element});
-                }
-            };
-        }])
-        .directive('nmdcInputChange', ['$parse', '$timeout', function ($parse, $timeout) {
-            return {
-                link: function (scope, element, attrs) {
-                    var action = $parse(attrs.nmdcInputChange);
-                    var listener = function () {
-                        $timeout(function () { action(scope, {value: element.val()}); });
-                    };
-                    element.on('keydown input', listener);
-                    scope.$on('$destroy', function () {
-                        element.off('keydown input', listener);
-                    });
-                }
-            };
-        }])
         .controller('NmdcBasketController', ['$scope', 'NmdcModel', 'NmdcUtil', function ($scope, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.util = Util;
             ctrl.model = Model;
         }])
-        .controller('NmdcDetailsController', ['$scope', '$http', '$routeParams', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $routeParams, Model, Util) {
+        .controller('NmdcDetailsController', ['$sce', '$scope', '$http', '$routeParams', 'NmdcModel', 'NmdcUtil', function ($sce, $scope, $http, $routeParams, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
             ctrl.id = $routeParams.id;
 
-            $http.get(apiPath + 'getMetadataDetails?doi=' + ctrl.id)
-                .then(function (response) {
-                    var data = response.data;
-                    Util.adaptSearchResults(data.results);
-                    ctrl.details = data.results[0];
-                }, function (response) {
-                    ctrl.error = {title: 'Error getting metadata details', response: response};
-                });
+            $http({url:apiPath + 'getMetadataDetails?doi=' + ctrl.id, method:'GET', responseType:'text',
+transformResponse:[function (response) {
+$scope.html = response;
+$scope.trustedHtml = $sce.trustAsHtml($scope.html);
+ctrl.details=response;
+
+}]
+});
+   
+
+ 
+                    
+
+
+
+
         }]);
 }());
