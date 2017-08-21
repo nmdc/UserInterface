@@ -160,6 +160,8 @@
                 </div>
                 <hr>
             </div>
+	    <a class="btn  btn-info btn-xs" ng-show="ctrl.model.search.response.results" href="" ng-click="ctrl.model.basket.addpage($event)">Add page results to basket</a>
+	    <br/>
             <uib-pagination class="nmdc-pagination" ng-show="ctrl.model.search.response.results" total-items="ctrl.model.search.response.numFound"
                             ng-model="ctrl.model.search.currentPage" items-per-page="ctrl.model.search.itemsPerPage"
                             max-size="3" rotate=false class="pagination-sm" boundary-links="true"

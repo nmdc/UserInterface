@@ -3,20 +3,104 @@
     <p ng-show="ctrl.model.basket.count == 0">Basket is empty</p>
     <div class="nmdc-item" ng-repeat="(id, item) in ctrl.model.basket.idToItem">
         <h4><a class="btn btn-warning btn-xs" href="" ng-click="ctrl.model.basket.remove(item)"><span class="glyphicon glyphicon-remove"></span></a>
-            <a class="btn btn-info btn-xs" ng-href="#/details/{{item.Entry_ID | nmdcUriComponent}}">Details</a>
+          <a class="btn btn-info btn-xs" ng-href="{{item.landingpage}}">Details</a>
+	  <a class="btn btn-primary btn-xs"  data-toggle="collapse" data-target="#coll_{{id}}" aria-expanded="false" aria-controls="coll_{{id}}">
+	    Files
+	  </a>  
             {{item.Entry_Title}}</h4>
         <p>
             {{item.Data_Summary}}
-            <br>
-            <span ng-repeat="url in item.Data_URL">
+	    <div class="well well-sm collapse" id="coll_{{id}}">
+	      <div ng-repeat="url in item.Data_URL">
                 <a target="_blank" ng-href="{{url | nmdcUriDecode}}">{{url | nmdcUriDecode}}</a>
-                <br>
-            </span>
+	      </div>
+	    </div>
+	    
         </p>
         <hr>
     </div>
     <p>
         <a class="btn btn-primary btn-xs" ng-href="#/">Go to search</a>
         <a class="btn btn-warning btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.clear()">Clear basket</a>
+	<a class="btn btn-warning btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.downloadAll()">Download all</a>
+	<a class="btn btn-warning btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.subset()">Subset files</a>
+
     </p>
+
+<!-- Modal proccessing dialog-->
+<div class="modal fade" id="packageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ctrl.model.basket.progressTitle}}</h4>
+      </div>
+      <div class="modal-body">
+        <div ng-show="ctrl.model.basket.packing">Building zip file:</div>
+        <div ng-hide="ctrl.model.basket.packing">Zip has been built
+	  
+	</div>
+	<div class="progress">
+	  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{ctrl.model.basket.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ctrl.model.basket.progress}}%">
+	    {{ctrl.model.basket.progress}}%
+	  </div>
+	</div>
+	<a ng-hide="ctrl.model.basket.packing" href="/Subsetter/jobZip/{{ctrl.model.basket.jobID}}"  class="btn btn-primary btn-xs">
+	   Download file
+	</a>
+	
+	<div ng-show="ctrl.model.basket.packing" >
+	  {{ctrl.model.basket.lastLog}}
+	</div>	
+	<a class="btn btn-primary btn-xs"  data-toggle="collapse" data-target="#process-log" aria-expanded="false" aria-controls="process-log">
+	   Proccessing log
+	</a>
+	<div class="collapse" id="process-log" >
+	<div class="log-item"  ng-repeat="item in ctrl.model.basket.log">
+	  {{item}}
+	</div>
+	</div>
+
+      </div>
+      <div class="modal-footer">
+	
+        <button type="button" class="btn btn-default" ng-click="ctrl.model.basket.cancelJob()" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+<!-- Modal subset dialog-->
+<div class="modal fade" id="subsetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Select bounding box</h4>
+      </div>
+      <div class="modal-body">
+	<div id="subsetMap">
+	</div>
+	Include non subsetable datasets<input type="checkbox" ng-model="ctrl.model.basket.includeAll" ng-change="ctrl.model.basket.flip()" id="ng-include-all" />
+	<br/>
+	
+	Min Latitude,Longitude
+     	<input size="6" name="subset.miny" ng-model="ctrl.model.basket.miny">
+	<input size="6" name="subset.minx" ng-model="ctrl.model.basket.minx">
+	Max Latitude,Longitude
+	<input size="6" name="subset.maxy" ng-model="ctrl.model.basket.maxy">
+	<input size="6" name="subset.maxx" ng-model="ctrl.model.basket.maxx">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="ctrl.model.basket.startSubset()">Subset</button>
+	<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    
+</div>
+ 

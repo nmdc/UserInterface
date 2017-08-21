@@ -141,10 +141,9 @@
                 return decodeURIComponent(uriComponent);
             };
         }])
-        .factory('NmdcModel', ['$http', '$window', function ($http, $window) {
-
+        .factory('NmdcModel', ['$http', '$window','$timeout','$location', function ($http, $window,$timeout,$location) {
             var defaultExpanded = $window.innerWidth >= 768;
-
+	    
             var model = {
                 ready: false,
                 options: {facetExpansionLevel: 1},
@@ -155,6 +154,7 @@
                     response: {},
                     itemsPerPage: 10,
                     currentPage: 1,
+		    initPage:true ,
                     text: '',
                     coverage: {
                         geographical: {
@@ -187,7 +187,13 @@
             }
 
             function init() {
-                model.ready = true;
+		if ($window.localStorage.getItem("nmdcBasket")) {
+		    model.basket.idToItem=JSON.parse($window.localStorage.getItem("nmdcBasket"));
+		    model.basket.count=Object.keys(model.basket.idToItem).length;
+		}
+		
+		//xxxxx
+		model.ready = true;
                 model.facets.forEach(function (facet) {
                     facet.expanded = defaultExpanded;
                     facet.expandedNodes = [];
@@ -195,8 +201,93 @@
                     facet.allNodes = [];
                     initFacetTree(facet, null, facet.children, 0);
                 });
+
+		if ($window.localStorage.getItem("nmdcSearch")) {
+		    var searchState = JSON.parse($window.localStorage.getItem("nmdcSearch"));
+		    console.log(searchState);
+		    
+		    model.search.currentPage=searchState.offset/model.search.itemsPerPage+1;
+		    var searchTerms = searchState.q.split("AND");
+		    console.log(searchTerms);
+		    searchTerms.forEach(function (term,i) {
+			if (term.charAt(0) == '(') {
+			    term = term.trim().slice(1,-1);
+			}
+			if (term.indexOf("Provider:") >= 0) {
+			    term.split(" OR ").forEach(function (t,i) {
+				var facetValue = t.trim().slice(10,-1);
+				model.facets[1].allNodes.forEach(function (i,j){
+				    if (i.value==facetValue) {
+					model.facets[1].selectedNodes.push(i);
+				    }
+				});
+			    });
+			} else if (term.indexOf("Scientific_Keyword:") >= 0) {
+			    term.split(" OR ").forEach(function (t,i) {
+				var facetValue =t.slice(20,-1).split(">");
+				facetValue.shift();
+				var facetLevel = model.facets[0].children[0];
+				facetValue.forEach(function (i,j) {
+				    facetLevel.childFacets.forEach(function (fi,fj){
+					if (fi.value==i) {
+					    facetLevel = fi;
+					}
+				    });
+				});
+				model.facets[0].selectedNodes.push(facetLevel);
+				while (facetLevel.parent) {
+				    model.facets[0].expandedNodes.push(facetLevel.parent);
+				    facetLevel = facetLevel.parent;
+				}
+			    });
+			} else if (term.indexOf("location_rpt:") >= 0) {
+
+			} else {
+			    var searchText = "";
+			    term.split("OR").forEach(function (t,i) {
+				searchText = searchText +" "+t.trim().slice(1,-1);
+			    });
+			    model.search.text=searchText.trim();
+			}
+		    });
+		
+		//TODO add time parameter
+		    if (searchState.beginDate) {
+			console.log(searchState.beginDate);
+			console.log(Date.parse(searchState.beginDate));
+			
+			
+			//model.search.coverage.temporal.beginDate=Date.parse(searchState.beginDate);
+			//model.search.coverage.temporal.endDate=Date.parse(searchState.endDate);
+		        // model.search.coverage.temporal.selected = true;
+		}
+		    
+		
+		}
+	
+		model.search.initPage=false;
             }
 
+	    function showProgress() {
+		$http.get('/Subsetter/checkNMDCJob',
+			  {params: {id: model.basket.jobID}}
+			 )
+                    .then(function (response) {
+			model.basket.log = response.data.log;
+			model.basket.lastLog = response.data.log.slice(-1).pop();
+			model.basket.progress = response.data.progress;
+			model.basket.packing=response.data.running;
+			if (response.data.running) {
+			    $timeout(showProgress, 500);
+			}
+
+			
+                }, function (response) {
+                    console.log("error",response);
+                });
+		
+	    }
+	    
             $http.get(apiPath + 'getFacets')
                 .then(function (response) {
                     angular.extend(model, response.data);
@@ -213,6 +304,230 @@
                 if (model.basket.idToItem[item.Entry_ID]) return;
                 model.basket.idToItem[item.Entry_ID] = item;
                 model.basket.count++;
+		$window.localStorage.setItem("nmdcBasket",JSON.stringify(model.basket.idToItem));
+            };
+	    model.basket.downloadAll = function () {
+		$('#packageModal').modal('show')
+		model.basket.progressTitle="Zip basket";
+		var res = $http.post('/Subsetter/basketZip',model.basket.idToItem);
+		res.success(function(data, status, headers, config) {
+		    model.basket.jobID=data.id;
+		    model.basket.log=[];
+		    model.basket.progress = 0;
+		    model.basket.packing=true;
+		    $timeout(showProgress, 500);
+		});
+		res.error(function(data, status, headers, config) {
+	             console.log("failure message: " + JSON.stringify({data: data}));
+		});
+            };
+	    model.basket.cancelJob = function () {
+		$http.get('/Subsetter/cancelJob',
+			  {params: {id: model.basket.jobID}}
+			 )
+                    .then(function (response) {
+			console.log("Job cancelled");
+                    }, function (response) {
+			console.log("error",response);
+                    });
+	    };
+	    model.basket.subset = function () {
+
+		if (model.basket.subsetMap) {
+		    model.basket.subsetMap.remove();
+		}
+		$('#subsetModal').modal('show').on('shown.bs.modal', function(){
+		    model.basket.subsetMap.invalidateSize(); //Hack to force leaflet to work in bootstrap modal dialog
+		    model.basket.subsetMap.fitBounds(model.basket.mapBounds);
+		});
+
+		model.basket.subsetMap = L.map('subsetMap').setView([60.0, 0.0], 6);
+
+		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+		    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(model.basket.subsetMap);
+
+		var drawnItems = new L.FeatureGroup();
+
+		var subsetItems = new L.FeatureGroup();
+		var nonsubsetItems = new L.FeatureGroup();
+		
+		model.basket.subsetMap.addLayer(subsetItems);
+		model.basket.subsetMap.addLayer(nonsubsetItems);
+		
+		model.basket.subsetMap.addLayer(drawnItems);
+		var drawControl = new L.Control.Draw({
+		    draw: {
+			polyline:false,
+			circle:false,
+			polygon: false,
+			marker: false
+		
+		    },
+		    edit: {
+			featureGroup: drawnItems,
+			edit:false,
+			remove:false
+		    }
+		});
+
+		//String are for legend, should be a bbter way to achieve this
+		var subsetStyle={fillColor:'#ffff00',color: 'green',fillOpacity: 0.0};
+		var subsetStyleString="border: 2px solid green";
+		var nonSubsetStyle={fillColor:'#ff00ff',color: 'red',fillOpacity: 0.0};
+		var nonSubsetStyleString="border: 2px solid red";
+		
+		
+		model.basket.subsetMap.addControl(drawControl);
+		Object.values(model.basket.idToItem).forEach(function (value, key) {
+
+		    var subset = false;
+		    value.Data_URL.forEach(function(dataURL){
+			console.log(dataURL);
+			subset = subset || (dataURL.indexOf('dodsC') != -1 );
+		    });
+		    
+		    var marker = value.location_rpt;
+                    if (marker) {
+                        if (marker.indexOf('POLYGON((') === 0) {
+			    var points = [];
+			    marker.substring(9, marker.length - 2).split(',').forEach(function (p) {
+				var parts = p.split(' ');
+				points.push(L.latLng(parseFloat(parts[1]), parseFloat(parts[0])));
+                            });
+                            var polygon = L.polygon(points);
+			    value.subsetAble = subset;
+			    value.bounds = polygon.getBounds();
+			    
+			    if (subset) {
+				polygon.setStyle(subsetStyle);
+				subsetItems.addLayer(polygon);
+			    } else {
+				polygon.setStyle(nonSubsetStyle);
+				nonsubsetItems.addLayer(polygon);
+			    }
+
+                        } else {
+			    var parts = marker.split(' ');
+			    var point = L.latLng(parseFloat(parts[1]), parseFloat(parts[0]));
+			    value.subsetAble = subset;
+			    value.bounds =point;
+			    if (subset) {
+				subsetItems.addLayer(point);
+			    } else {
+				nonsubsetItems.addLayer(point);
+			    }
+                        }
+                    }
+		});
+		//subsetMap.fitBounds(markerItems.getBounds(,) {maxZoom: Math.min(subsetMap.getZoom(), 3)});
+		console.log(subsetItems.getBounds());
+		
+		if (subsetItems.getBounds().isValid()) {
+		    model.basket.mapBounds =subsetItems.getBounds();
+		} else if (nonsubsetItems.getBounds().isValid()) {
+		    model.basket.mapBounds = nonsubsetItems.getBounds();
+		} else {
+		    console.log("No items to use for bounds")
+		}
+		
+		
+		model.basket.nonSubsetMarkers=nonsubsetItems;
+		
+		
+		model.basket.includeAll=true;
+		model.basket.miny="";
+		model.basket.maxy="";
+		model.basket.minx="";
+		model.basket.maxx="";
+		
+
+		var legend = L.control({position: 'bottomright'});
+		legend.onAdd = function (map) {
+		    var div = L.DomUtil.create('div', 'info subsetLegend');
+		    div.innerHTML +="<span style=\""+subsetStyleString+"\"></span>Subsettable<br/>";
+		    div.innerHTML +="<span style=\""+nonSubsetStyleString+"\"></span>Non Subsettable";
+		    return div;
+		};
+
+		
+		legend.addTo(model.basket.subsetMap);
+	    
+		
+		model.basket.subsetMap.on("draw:created", function (e) {
+		    var type = e.layerType;
+		    var layer = e.layer;
+		    drawnItems.clearLayers();
+		    drawnItems.addLayer(layer);
+
+		    var coords = layer.getLatLngs();
+		    //Could do this with map/filter but we know there is only four coords
+		    var minY = Math.min(coords[0].lat,coords[1].lat,coords[2].lat,coords[3].lat);
+		    var maxY = Math.max(coords[0].lat,coords[1].lat,coords[2].lat,coords[3].lat);
+		    var minX = Math.min(coords[0].lng,coords[1].lng,coords[2].lng,coords[3].lng);
+		    var maxX = Math.max(coords[0].lng,coords[1].lng,coords[2].lng,coords[3].lng);
+
+		    //Fugly hack to force angular to see changes
+		    $timeout(function () {
+			model.basket.bounds=layer.getBounds();
+			model.basket.miny=minY;
+			model.basket.maxy=maxY;
+			model.basket.minx=minX;
+			model.basket.maxx=maxX;
+		    });
+		});
+
+		
+		
+	    };
+	    model.basket.flip = function() {
+		if (!model.basket.includeAll) {
+		    model.basket.subsetMap.removeLayer(model.basket.nonSubsetMarkers);
+		} else {
+		    model.basket.subsetMap.addLayer(model.basket.nonSubsetMarkers);
+		}
+	    };
+	    model.basket.startSubset = function() {
+		$('#subsetModal').modal('hide');
+
+
+		$('#packageModal').modal('show')
+		model.basket.progressTitle="Subset basket";
+
+		var data = {};
+		Object.values(model.basket.idToItem).forEach(function (value, key) {
+		    if (value.subsetAble){ 
+			data[value.Entry_ID]=value;
+		    } else if (model.basket.includeAll ){
+			if (model.basket.bounds.intersects(value.bounds)) {
+			    data[value.Entry_ID]=value;
+			}
+		    }
+		});
+		
+		var subsetReq = { basket:data,
+				  minX:model.basket.minx,
+				  minY:model.basket.miny,
+				  maxX:model.basket.maxx,
+				  maxY:model.basket.maxy
+		}
+		var res = $http.post('/Subsetter/basketSubset',subsetReq);
+		res.success(function(data, status, headers, config) {
+		    model.basket.jobID=data.id;
+		    model.basket.log=[];
+		    model.basket.progress = 0;
+		    model.basket.packing=true;
+		    $timeout(showProgress, 500);
+		});
+		res.error(function(data, status, headers, config) {
+	             console.log("failure message: " + JSON.stringify({data: data}));
+		});
+	    };
+	    model.basket.addpage = function (event) {
+		model.search.response.results.forEach(model.basket.add);
+		if (event.ctrlKey) { //Quick shortcut to jump to basket
+		    $location.url('/basket');
+		}
             };
             model.basket.remove = function (item) {
                 if (!model.basket.idToItem[item.Entry_ID]) return;
@@ -227,7 +542,7 @@
             $scope.ctrl = ctrl;
             ctrl.model = Model;
         }])
-        .controller('NmdcSearchController', ['$scope', '$http', '$q', '$log', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $q, $log, Model, Util) {
+        .controller('NmdcSearchController', ['$scope', '$http', '$q', '$log','$window', 'NmdcModel', 'NmdcUtil', function ($scope, $http, $q, $log,$window, Model, Util) {
             var ctrl = this;
             $scope.ctrl = ctrl;
             ctrl.model = Model;
@@ -260,6 +575,8 @@
                 ctrl.search();
             };
             ctrl.search = function (isPageSearch) {
+		console.log("-------Start search function----------")
+		
                 function getSolrQuery() {
                     var terms = [];
                     Model.facets.forEach(function (facet) {
@@ -285,6 +602,7 @@
                         }
                     });
                     if (Model.search.text) {
+			console.log("Have text");
                         var words = Util.splitSearchText(Model.search.text);
                         var textTerm = words.join(' OR ');
                         if (words.length > 1) textTerm = '(' + textTerm + ')';
@@ -317,13 +635,18 @@
                     }
                     return parameters;
                 }
-
+		console.log("Get query param");
                 var queryParameters = getQueryParameters();
+		console.log("got ",queryParameters);
                 if (angular.equals(Model.search.queryParameters, queryParameters)) return;
                 Model.search.queryParameters = queryParameters;
                 $log.log(queryParameters);
                 $log.log(Util.urlParametersToString(queryParameters));
 
+		//yyyy
+		$window.localStorage.setItem("nmdcSearch",JSON.stringify(queryParameters));
+
+		
                 cancelSearch();
                 Model.hasSearched = true;
                 ctrl.isSearching = true;
@@ -343,6 +666,8 @@
                     if (!isPageSearch) Model.search.currentPage = 1;
                 }
 
+		console.log("Search callled ",queryParameters);
+		
                 $http.get(apiPath + 'search?' + Util.urlParametersToString(queryParameters), {timeout: canceller.promise})
                     .then(function (response) {
                         setResponseData(response.data);
@@ -369,11 +694,17 @@
             ctrl.removeMarker = function () {
                 delete ctrl.marker;
             };
-
+	   
             $scope.$watch('ctrl.model.search.currentPage', function (newValue, oldValue) {
                 if (newValue === oldValue) return;
                 ctrl.search(true);
             });
+
+	     $scope.$watch('ctrl.model.search.initPage', function (newValue, oldValue) {
+                console.log("init search")
+		ctrl.search(true);
+            });
+	    
             $scope.$watch('ctrl.model.search.coverage', function (newValue, oldValue) {
                 if (newValue === oldValue) return;
                 ctrl.search();
