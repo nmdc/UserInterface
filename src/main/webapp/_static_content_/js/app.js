@@ -187,8 +187,8 @@
             }
 
             function init() {
-		if ($window.localStorage.getItem("nmdcBasket")) {
-		    model.basket.idToItem=JSON.parse($window.localStorage.getItem("nmdcBasket"));
+		if ($window.sessionStorage.getItem("nmdcBasket")) {
+		    model.basket.idToItem=JSON.parse($window.sessionStorage.getItem("nmdcBasket"));
 		    model.basket.count=Object.keys(model.basket.idToItem).length;
 		}
 		
@@ -202,13 +202,10 @@
                     initFacetTree(facet, null, facet.children, 0);
                 });
 
-		if ($window.localStorage.getItem("nmdcSearch")) {
-		    var searchState = JSON.parse($window.localStorage.getItem("nmdcSearch"));
-		    console.log(searchState);
-		    
+		if ($window.sessionStorage.getItem("nmdcSearch")) {
+		    var searchState = JSON.parse($window.sessionStorage.getItem("nmdcSearch"));
 		    model.search.currentPage=searchState.offset/model.search.itemsPerPage+1;
 		    var searchTerms = searchState.q.split("AND");
-		    console.log(searchTerms);
 		    searchTerms.forEach(function (term,i) {
 			if (term.charAt(0) == '(') {
 			    term = term.trim().slice(1,-1);
@@ -304,7 +301,7 @@
                 if (model.basket.idToItem[item.Entry_ID]) return;
                 model.basket.idToItem[item.Entry_ID] = item;
                 model.basket.count++;
-		$window.localStorage.setItem("nmdcBasket",JSON.stringify(model.basket.idToItem));
+		$window.sessionStorage.setItem("nmdcBasket",JSON.stringify(model.basket.idToItem));
             };
 	    model.basket.downloadAll = function () {
 		$('#packageModal').modal('show')
@@ -379,13 +376,30 @@
 		
 		
 		model.basket.subsetMap.addControl(drawControl);
-		Object.values(model.basket.idToItem).forEach(function (value, key) {
+		Object.keys(model.basket.idToItem).forEach(function (valueID, key) {
 
+		    var value = model.basket.idToItem[valueID]; //Hack for IE
+		    
 		    var subset = false;
-		    value.Data_URL.forEach(function(dataURL){
-			console.log(dataURL);
-			subset = subset || (dataURL.indexOf('dodsC') != -1 );
-		    });
+		    if (value.Data_URL_Subtype) {
+			var subtypes = value.Data_URL_Subtype.slice(1,-1).split(",");
+			subtypes.forEach(function(subtype) {
+			    subset = subset || (subtype.trim()==="OPENDAP DATA (DODS)");
+			});
+		    }
+
+		    //Hack for met.no url types
+		    
+		    if (value.Data_URL_Type) {
+			var types = value.Data_URL_Type.slice(1,-1).split(",");
+			types.forEach(function(type) {
+			    subset = subset || (type.trim()==="Access to OPeNDAP service");
+			});
+		    }
+		    
+		    
+
+		    
 		    
 		    var marker = value.location_rpt;
                     if (marker) {
@@ -410,12 +424,13 @@
                         } else {
 			    var parts = marker.split(' ');
 			    var point = L.latLng(parseFloat(parts[1]), parseFloat(parts[0]));
+			    var pointMarker = L.marker(point)
 			    value.subsetAble = subset;
-			    value.bounds =point;
+			    value.point =point;
 			    if (subset) {
-				subsetItems.addLayer(point);
+				subsetItems.addLayer(pointMarker);
 			    } else {
-				nonsubsetItems.addLayer(point);
+				nonsubsetItems.addLayer(pointMarker);
 			    }
                         }
                     }
@@ -434,7 +449,7 @@
 		
 		model.basket.nonSubsetMarkers=nonsubsetItems;
 		
-		
+		model.basket.alert="";
 		model.basket.includeAll=true;
 		model.basket.miny="";
 		model.basket.maxy="";
@@ -488,22 +503,47 @@
 		}
 	    };
 	    model.basket.startSubset = function() {
-		$('#subsetModal').modal('hide');
+		if (!model.basket.minx
+		    || !model.basket.miny
+		    || !model.basket.maxx
+		    || !model.basket.maxy) {
+		    model.basket.alert="Subset bounds not set";
+		    return;
+		}
 
-
-		$('#packageModal').modal('show')
-		model.basket.progressTitle="Subset basket";
 
 		var data = {};
-		Object.values(model.basket.idToItem).forEach(function (value, key) {
+		Object.keys(model.basket.idToItem).forEach(function (valueID, key) {
+		    var value = model.basket.idToItem[valueID]; //Hack for IE
+		    
 		    if (value.subsetAble){ 
 			data[value.Entry_ID]=value;
 		    } else if (model.basket.includeAll ){
-			if (model.basket.bounds.intersects(value.bounds)) {
-			    data[value.Entry_ID]=value;
+
+			if (value.bounds) {
+			    if (model.basket.bounds.intersects(value.bounds)) {
+				data[value.Entry_ID]=value;
+			    }
+			} else {
+			    if (model.basket.bounds.contains(value.point)) {
+				data[value.Entry_ID]=value;
+			    }
 			}
 		    }
 		});
+	
+		if (angular.equals(data, {})){
+		    model.basket.alert="There are no datasets selected";
+		    return;
+		}
+	
+		
+
+		$('#subsetModal').modal('hide');
+		
+		
+		$('#packageModal').modal('show')
+		model.basket.progressTitle="Subset basket";
 		
 		var subsetReq = { basket:data,
 				  minX:model.basket.minx,
@@ -575,7 +615,7 @@
                 ctrl.search();
             };
             ctrl.search = function (isPageSearch) {
-		console.log("-------Start search function----------")
+		//console.log("-------Start search function----------")
 		
                 function getSolrQuery() {
                     var terms = [];
@@ -635,16 +675,17 @@
                     }
                     return parameters;
                 }
-		console.log("Get query param");
+		
                 var queryParameters = getQueryParameters();
-		console.log("got ",queryParameters);
+		
                 if (angular.equals(Model.search.queryParameters, queryParameters)) return;
                 Model.search.queryParameters = queryParameters;
                 $log.log(queryParameters);
                 $log.log(Util.urlParametersToString(queryParameters));
 
 		//yyyy
-		$window.localStorage.setItem("nmdcSearch",JSON.stringify(queryParameters));
+		//$window.localStorage.setItem("nmdcSearch",JSON.stringify(queryParameters));
+		$window.sessionStorage.setItem("nmdcSearch",JSON.stringify(queryParameters));
 
 		
                 cancelSearch();
@@ -666,7 +707,7 @@
                     if (!isPageSearch) Model.search.currentPage = 1;
                 }
 
-		console.log("Search callled ",queryParameters);
+
 		
                 $http.get(apiPath + 'search?' + Util.urlParametersToString(queryParameters), {timeout: canceller.promise})
                     .then(function (response) {

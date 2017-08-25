@@ -22,8 +22,8 @@
     <p>
         <a class="btn btn-primary btn-xs" ng-href="#/">Go to search</a>
         <a class="btn btn-warning btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.clear()">Clear basket</a>
-	<a class="btn btn-warning btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.downloadAll()">Download all</a>
-	<a class="btn btn-warning btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.subset()">Subset files</a>
+	<a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.downloadAll()">Download all</a>
+	<a class="btn btn-info btn-xs" ng-hide="ctrl.model.basket.count == 0" href="" ng-click="ctrl.model.basket.subset()">Subset files</a>
 
     </p>
 
@@ -40,7 +40,7 @@
         <div ng-hide="ctrl.model.basket.packing">Zip has been built
 	  
 	</div>
-	<div class="progress">
+	<div ng-show="ctrl.model.basket.packing" class="progress">
 	  <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{ctrl.model.basket.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{ctrl.model.basket.progress}}%">
 	    {{ctrl.model.basket.progress}}%
 	  </div>
@@ -80,6 +80,7 @@
         <h4 class="modal-title" id="myModalLabel">Select bounding box</h4>
       </div>
       <div class="modal-body">
+	<div class="alert alert-danger" ng-show="ctrl.model.basket.alert" >{{ctrl.model.basket.alert}}</div>
 	<div id="subsetMap">
 	</div>
 	Include non subsetable datasets<input type="checkbox" ng-model="ctrl.model.basket.includeAll" ng-change="ctrl.model.basket.flip()" id="ng-include-all" />
@@ -91,6 +92,8 @@
 	Max Latitude,Longitude
 	<input size="6" name="subset.maxy" ng-model="ctrl.model.basket.maxy">
 	<input size="6" name="subset.maxx" ng-model="ctrl.model.basket.maxx">
+	
+	
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="ctrl.model.basket.startSubset()">Subset</button>
