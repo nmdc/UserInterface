@@ -54,7 +54,7 @@ public class WebAppInitalizer extends AbstractDispatcherServletInitializer {
         encodingFilter.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "/*");
  
        try {
-            InitalizeLogbackHandler.getInstance().initalize(System.getProperty("catalina.base") + "/conf/nmdcUserIntreface_logback.xml", true);
+            InitalizeLogbackHandler.getInstance().initalize(System.getProperty("catalina.base") + "/conf/nmdcUserInterface_logback.xml", true);
          
        } catch (LoggerInitalizationException ex) {
             LOGGER.error("Logging initializaton failed.", ex);
